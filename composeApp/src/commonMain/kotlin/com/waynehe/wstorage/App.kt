@@ -1,48 +1,52 @@
 package com.waynehe.wstorage
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.safeContentPadding
-import androidx.compose.material3.Button
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import org.jetbrains.compose.resources.painterResource
+import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.ui.tooling.preview.Preview
-
-import wstorage.composeapp.generated.resources.Res
-import wstorage.composeapp.generated.resources.compose_multiplatform
+import com.waynehe.wstorage.data.repository.InMemoryCardRepository
 
 @Composable
 @Preview
 fun App() {
     MaterialTheme {
-        var showContent by remember { mutableStateOf(false) }
         Column(
             modifier = Modifier
-                .background(MaterialTheme.colorScheme.primaryContainer)
-                .safeContentPadding()
-                .fillMaxSize(),
+                .background(MaterialTheme.colorScheme.background)
+                .fillMaxSize()
+                .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Button(onClick = { showContent = !showContent }) {
-                Text("Click me!")
+            val cardRepository = remember { InMemoryCardRepository() }
+            val previewSeries by remember(cardRepository) {
+                mutableStateOf(cardRepository.getAllSeries())
             }
-            AnimatedVisibility(showContent) {
-                val greeting = remember { Greeting().greet() }
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    Image(painterResource(Res.drawable.compose_multiplatform), null)
-                    Text("Compose: $greeting")
-                }
+
+            Text(
+                text = "WStorage",
+                style = MaterialTheme.typography.headlineMedium
+            )
+            Text(
+                text = "Series in repository: ${previewSeries.size}",
+                style = MaterialTheme.typography.bodyMedium
+            )
+            previewSeries.forEach { series ->
+                Text(
+                    text = "• ${series.name} (${series.setCode})",
+                    style = MaterialTheme.typography.bodySmall
+                )
             }
         }
     }

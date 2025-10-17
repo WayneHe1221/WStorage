@@ -17,6 +17,12 @@ data class WsCard(
     val rarity: Rarity,
     @SerialName("description")
     val description: String,
+    @SerialName("color")
+    val color: String? = null,
+    @SerialName("level")
+    val level: Int? = null,
+    @SerialName("cost")
+    val cost: Int? = null,
     @SerialName("imageUrl")
     val imageUrl: String? = null
 )

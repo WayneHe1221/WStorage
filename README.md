@@ -66,6 +66,19 @@ in your IDE's toolbar or run it directly from the terminal:
 To build and run the development version of the iOS app, use the run configuration from the run widget
 in your IDE’s toolbar or open the [/iosApp](./iosApp) directory in Xcode and run it from there.
 
+## Updating card data
+
+The application reads card metadata from [`composeApp/src/commonMain/resources/cards.json`](composeApp/src/commonMain/resources/cards.json).
+Run the CSV importer in [`tools/ws-card-importer`](tools/ws-card-importer) whenever you need to refresh the dataset:
+
+```bash
+python tools/ws-card-importer/import_cards.py <path-to-csv>
+```
+
+Execute the command from the repository root. The script accepts local files or HTTP URLs and rewrites
+the JSON file in the format consumed by the app. Refer to the tool’s [README](tools/ws-card-importer/README.md)
+for the expected CSV columns and additional options.
+
 ---
 
 Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html),

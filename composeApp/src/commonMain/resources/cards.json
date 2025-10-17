@@ -1,0 +1,120 @@
+{
+  "series": [
+    {
+      "id": "sao-10th",
+      "name": "Sword Art Online 10th Anniversary",
+      "setCode": "SAO/S100",
+      "releaseYear": 2023
+    },
+    {
+      "id": "hololive-vol2",
+      "name": "hololive production Vol.2",
+      "setCode": "HOL/WE36",
+      "releaseYear": 2024
+    },
+    {
+      "id": "blue-archive",
+      "name": "Blue Archive",
+      "setCode": "BA/WE31",
+      "releaseYear": 2024
+    }
+  ],
+  "cards": [
+    {
+      "id": "sao-10th-001",
+      "seriesId": "sao-10th",
+      "cardCode": "SAO/S100-001",
+      "title": "Starry Night Encounter",
+      "rarity": "SR",
+      "description": "Kazuto and Asuna under a starlit sky.",
+      "color": "BLUE",
+      "level": 3,
+      "cost": 2,
+      "imageUrl": "https://example.com/sao100-001.jpg"
+    },
+    {
+      "id": "sao-10th-002",
+      "seriesId": "sao-10th",
+      "cardCode": "SAO/S100-002",
+      "title": "Lightning Flash Parry",
+      "rarity": "R",
+      "description": "Asuna counters with breathtaking speed.",
+      "color": "YELLOW",
+      "level": 2,
+      "cost": 1,
+      "imageUrl": "https://example.com/sao100-002.jpg"
+    },
+    {
+      "id": "hololive-vol2-001",
+      "seriesId": "hololive-vol2",
+      "cardCode": "HOL/WE36-001",
+      "title": "Secret Society holoX",
+      "rarity": "SP",
+      "description": "La+ orchestrates a dramatic entrance.",
+      "color": "PURPLE",
+      "level": 3,
+      "cost": 2,
+      "imageUrl": "https://example.com/holowe36-001.jpg"
+    },
+    {
+      "id": "hololive-vol2-002",
+      "seriesId": "hololive-vol2",
+      "cardCode": "HOL/WE36-002",
+      "title": "Idol of the Stars",
+      "rarity": "SR",
+      "description": "Suisei captivates the audience.",
+      "color": "BLUE",
+      "level": 3,
+      "cost": 2,
+      "imageUrl": "https://example.com/holowe36-002.jpg"
+    },
+    {
+      "id": "ba-001",
+      "seriesId": "blue-archive",
+      "cardCode": "BA/WE31-001",
+      "title": "Tactical Treasurer",
+      "rarity": "U",
+      "description": "Yuuka balances the books with precision.",
+      "color": "YELLOW",
+      "level": 1,
+      "cost": 0,
+      "imageUrl": "https://example.com/bawe31-001.jpg"
+    },
+    {
+      "id": "ba-002",
+      "seriesId": "blue-archive",
+      "cardCode": "BA/WE31-002",
+      "title": "After-School Sweets Club",
+      "rarity": "SR",
+      "description": "Azusa enjoys desserts after missions.",
+      "color": "RED",
+      "level": 2,
+      "cost": 2,
+      "imageUrl": "https://example.com/bawe31-002.jpg"
+    },
+    {
+      "id": "ba-003",
+      "seriesId": "blue-archive",
+      "cardCode": "BA/WE31-003",
+      "title": "On-the-Job Spirit",
+      "rarity": "R",
+      "description": "Aru rallies the Problem Solver 68 squad.",
+      "color": "GREEN",
+      "level": 1,
+      "cost": 1,
+      "imageUrl": "https://example.com/bawe31-003.jpg"
+    },
+    {
+      "id": "ba-004",
+      "seriesId": "blue-archive",
+      "cardCode": "BA/WE31-004",
+      "title": "Pro Gamer Mutsuki",
+      "rarity": "C",
+      "description": "Mutsuki clears missions with gamer precision.",
+      "color": "RED",
+      "level": 0,
+      "cost": 0,
+      "imageUrl": "https://example.com/bawe31-004.jpg"
+    }
+  ]
+}

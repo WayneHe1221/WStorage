@@ -17,9 +17,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilterChip
@@ -34,15 +34,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.fillMaxSize
+import coil3.compose.AsyncImage
 import com.russhwolf.settings.Settings
 import com.waynehe.wstorage.data.model.InventoryEntry
 import com.waynehe.wstorage.data.model.Rarity
@@ -578,6 +580,7 @@ private fun InventoryActionButton(text: String, onClick: () -> Unit) {
 
 @Composable
 private fun CardThumbnail(card: CardSummary) {
+    val placeholderLabel = card.title.firstOrNull()?.uppercaseChar()?.toString() ?: "?"
     Box(
         modifier = Modifier
             .size(64.dp)
@@ -585,13 +588,44 @@ private fun CardThumbnail(card: CardSummary) {
             .background(MaterialTheme.colorScheme.surfaceVariant),
         contentAlignment = Alignment.Center
     ) {
-        val label = card.imageUrl?.takeIf { it.isNotBlank() }
-            ?: card.title.firstOrNull()?.uppercaseChar()?.toString()
-        Text(
-            text = label ?: "?",
-            style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.onSurface
-        )
+        val imageUrl = card.imageUrl
+        var showFallback by remember(imageUrl) { mutableStateOf(imageUrl.isNullOrBlank()) }
+        var isLoading by remember(imageUrl) { mutableStateOf(!imageUrl.isNullOrBlank()) }
+
+        if (!imageUrl.isNullOrBlank()) {
+            AsyncImage(
+                model = imageUrl,
+                contentDescription = card.title,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize(),
+                onLoading = { isLoading = true },
+                onError = {
+                    isLoading = false
+                    showFallback = true
+                },
+                onSuccess = {
+                    isLoading = false
+                    showFallback = false
+                }
+            )
+        }
+
+        when {
+            isLoading -> {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(24.dp),
+                    strokeWidth = 2.dp
+                )
+            }
+
+            showFallback -> {
+                Text(
+                    text = placeholderLabel,
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+            }
+        }
     }
 }
 

@@ -150,13 +150,13 @@ class InMemoryCardRepository(
         private val defaultSeries = listOf(
             WsSeries(
                 id = "ddd-s97",
-                name = "The Detective Is Already Dead",
+                name = "ダンダダン / DAN DA DAN",
                 setCode = "DDD/S97",
                 releaseYear = 2021
             ),
             WsSeries(
                 id = "sfn-s108",
-                name = "Saekano the Movie: Finale",
+                name = "葬送のフリーレン / Frieren: Beyond Journey's End",
                 setCode = "SFN/S108",
                 releaseYear = 2022
             )

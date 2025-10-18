@@ -37,6 +37,11 @@ RARITY_NORMALISATION = {
     "SSP": "SP",
 }
 
+SET_NAME_OVERRIDES: dict[str, str] = {
+    "DDD": "ダンダダン / DAN DA DAN",
+    "SFN": "葬送のフリーレン / Frieren: Beyond Journey's End",
+}
+
 
 def parse_args(argv: Sequence[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Download Weiss Schwarz card data")
@@ -162,11 +167,16 @@ def build_series_row(info: dict[str, object], cards_raw: list[object], set_code:
         _first_str(info, ["setCode", "set_code", "productCode", "product_code", "series", "series_id"])
         or derive_set_code_from_cards(cards_raw, set_code)
     )
+    if not isinstance(set_code_value, str):
+        set_code_value = str(set_code_value)
     release_year = _extract_year(
         _first_str(info, ["release", "releaseDate", "release_date", "date"])
     )
     if release_year is None:
         release_year = _dt.date.today().year
+
+    set_family = set_code_value.split("/")[0].upper()
+    title = SET_NAME_OVERRIDES.get(set_family, title)
 
     series_id = slugify_series_id(set_code_value)
     return SeriesRow(id=series_id, name=title, setCode=set_code_value, releaseYear=release_year)

@@ -111,6 +111,8 @@ class InMemoryCardRepository(
         val level = obj.int("level")
         val cost = obj.int("cost")
         val imageUrl = obj.string("imageUrl")?.ifBlank { null }
+        val ownedCount = obj.int("ownedCount") ?: 0
+        val wishlistCount = obj.int("wishlistCount") ?: 0
         return WsCard(
             id = id,
             seriesId = seriesId,
@@ -121,7 +123,9 @@ class InMemoryCardRepository(
             color = color,
             level = level,
             cost = cost,
-            imageUrl = imageUrl
+            imageUrl = imageUrl,
+            ownedCount = ownedCount,
+            wishlistCount = wishlistCount
         )
     }
 
@@ -175,7 +179,8 @@ class InMemoryCardRepository(
                 color = "BLACK",
                 level = 3,
                 cost = 2,
-                imageUrl = null
+                imageUrl = null,
+                ownedCount = 3
             ),
             WsCard(
                 id = "sao-10th-002",
@@ -187,7 +192,8 @@ class InMemoryCardRepository(
                 color = "BLUE",
                 level = 2,
                 cost = 1,
-                imageUrl = null
+                imageUrl = null,
+                wishlistCount = 1
             ),
             WsCard(
                 id = "holo-vol2-001",
@@ -211,7 +217,8 @@ class InMemoryCardRepository(
                 color = "BLUE",
                 level = 3,
                 cost = 2,
-                imageUrl = null
+                imageUrl = null,
+                wishlistCount = 2
             ),
             WsCard(
                 id = "ba-001",
@@ -223,7 +230,8 @@ class InMemoryCardRepository(
                 color = "YELLOW",
                 level = 1,
                 cost = 0,
-                imageUrl = null
+                imageUrl = null,
+                ownedCount = 5
             ),
             WsCard(
                 id = "ba-002",
@@ -247,7 +255,8 @@ class InMemoryCardRepository(
                 color = "GREEN",
                 level = 1,
                 cost = 1,
-                imageUrl = null
+                imageUrl = null,
+                wishlistCount = 1
             )
         )
     }

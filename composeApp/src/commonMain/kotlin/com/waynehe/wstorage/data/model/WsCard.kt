@@ -10,5 +10,7 @@ data class WsCard(
     val color: String? = null,
     val level: Int? = null,
     val cost: Int? = null,
-    val imageUrl: String? = null
+    val imageUrl: String? = null,
+    val ownedCount: Int = 0,
+    val wishlistCount: Int = 0
 )

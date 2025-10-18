@@ -47,3 +47,17 @@ When new data becomes available:
 
 If you fetch data directly from the official website, download or export it as CSV before running
 the importer. This keeps the script light-weight and avoids depending on fragile HTML scraping.
+
+## Downloading official datasets
+
+The repository also provides `download_official_cards.py`, a helper that reaches the
+official Weiss Schwarz card list export endpoint. It downloads the specified set codes
+and writes the aggregated data to `cards.json`:
+
+```bash
+python tools/ws-card-importer/download_official_cards.py DDD SFN --pretty
+```
+
+The script falls back to the `offline/` directory when the network is unavailable or the
+official export cannot be reached. These JSON files contain curated snapshots for each
+set so that development can proceed even without internet access.

@@ -1,0 +1,82 @@
+{
+  "series": {
+    "id": "ddd-s97",
+    "name": "The Detective Is Already Dead",
+    "setCode": "DDD/S97",
+    "releaseYear": 2021
+  },
+  "cards": [
+    {
+      "id": "ddd-s97-001",
+      "seriesId": "ddd-s97",
+      "cardCode": "DDD/S97-001",
+      "title": "Legendary Detective, Siesta",
+      "rarity": "SR",
+      "description": "Siesta fearlessly confronts the case with perfect composure.",
+      "color": "BLUE",
+      "level": 3,
+      "cost": 2,
+      "imageUrl": "https://ws-tcg.com/wp/wp-content/cardlist/cardimages/DDD/S97/DDD-S97-001.png"
+    },
+    {
+      "id": "ddd-s97-002",
+      "seriesId": "ddd-s97",
+      "cardCode": "DDD/S97-002",
+      "title": "Reluctant Sidekick, Kimihiko",
+      "rarity": "R",
+      "description": "Kimihiko is pulled back onto the stage of adventure.",
+      "color": "YELLOW",
+      "level": 1,
+      "cost": 1,
+      "imageUrl": "https://ws-tcg.com/wp/wp-content/cardlist/cardimages/DDD/S97/DDD-S97-002.png"
+    },
+    {
+      "id": "ddd-s97-003",
+      "seriesId": "ddd-s97",
+      "cardCode": "DDD/S97-003",
+      "title": "Energetic Assistant, Nagisa",
+      "rarity": "U",
+      "description": "Nagisa keeps spirits high for the new detective team.",
+      "color": "GREEN",
+      "level": 0,
+      "cost": 0,
+      "imageUrl": "https://ws-tcg.com/wp/wp-content/cardlist/cardimages/DDD/S97/DDD-S97-003.png"
+    },
+    {
+      "id": "ddd-s97-004",
+      "seriesId": "ddd-s97",
+      "cardCode": "DDD/S97-004",
+      "title": "Mysterious Idol, Yui",
+      "rarity": "SR",
+      "description": "Yui steps onto the stage with a secret mission.",
+      "color": "RED",
+      "level": 2,
+      "cost": 1,
+      "imageUrl": "https://ws-tcg.com/wp/wp-content/cardlist/cardimages/DDD/S97/DDD-S97-004.png"
+    },
+    {
+      "id": "ddd-s97-005",
+      "seriesId": "ddd-s97",
+      "cardCode": "DDD/S97-005",
+      "title": "Shadow Operative, Hel",
+      "rarity": "SR",
+      "description": "Hel manipulates events from the darkness.",
+      "color": "BLUE",
+      "level": 2,
+      "cost": 2,
+      "imageUrl": "https://ws-tcg.com/wp/wp-content/cardlist/cardimages/DDD/S97/DDD-S97-005.png"
+    },
+    {
+      "id": "ddd-s97-006",
+      "seriesId": "ddd-s97",
+      "cardCode": "DDD/S97-006",
+      "title": "Tactical Support, Char",
+      "rarity": "U",
+      "description": "Char keeps the team coordinated from behind the scenes.",
+      "color": "YELLOW",
+      "level": 1,
+      "cost": 0,
+      "imageUrl": "https://ws-tcg.com/wp/wp-content/cardlist/cardimages/DDD/S97/DDD-S97-006.png"
+    }
+  ]
+}

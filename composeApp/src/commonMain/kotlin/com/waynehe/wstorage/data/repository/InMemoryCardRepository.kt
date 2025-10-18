@@ -149,114 +149,163 @@ class InMemoryCardRepository(
 
         private val defaultSeries = listOf(
             WsSeries(
-                id = "sao-10th",
-                name = "Sword Art Online 10th Anniversary",
-                setCode = "SAO/S100",
-                releaseYear = 2023
+                id = "ddd-s97",
+                name = "The Detective Is Already Dead",
+                setCode = "DDD/S97",
+                releaseYear = 2021
             ),
             WsSeries(
-                id = "hololive-vol2",
-                name = "hololive production Vol.2",
-                setCode = "HOL/WE36",
-                releaseYear = 2024
-            ),
-            WsSeries(
-                id = "blue-archive",
-                name = "Blue Archive",
-                setCode = "BA/WE31",
-                releaseYear = 2024
+                id = "sfn-s108",
+                name = "Saekano the Movie: Finale",
+                setCode = "SFN/S108",
+                releaseYear = 2022
             )
         )
 
         private val defaultCards = listOf(
             WsCard(
-                id = "sao-10th-001",
-                seriesId = "sao-10th",
-                cardCode = "SAO/S100-001",
-                title = "Dual Wielder, Kirito",
+                id = "ddd-s97-001",
+                seriesId = "ddd-s97",
+                cardCode = "DDD/S97-001",
+                title = "Legendary Detective, Siesta",
                 rarity = Rarity.SUPER_RARE,
-                description = "Protagonist of SAO with dual wielding ability.",
-                color = "BLACK",
+                description = "Siesta fearlessly confronts the case with perfect composure.",
+                color = "BLUE",
                 level = 3,
                 cost = 2,
-                imageUrl = null,
-                ownedCount = 3
+                imageUrl = "https://ws-tcg.com/wp/wp-content/cardlist/cardimages/DDD/S97/DDD-S97-001.png"
             ),
             WsCard(
-                id = "sao-10th-002",
-                seriesId = "sao-10th",
-                cardCode = "SAO/S100-002",
-                title = "Flash of the Blue, Asuna",
+                id = "ddd-s97-002",
+                seriesId = "ddd-s97",
+                cardCode = "DDD/S97-002",
+                title = "Reluctant Sidekick, Kimihiko",
                 rarity = Rarity.RARE,
-                description = "Asuna ready to support the front lines.",
-                color = "BLUE",
+                description = "Kimihiko is pulled back onto the stage of adventure.",
+                color = "YELLOW",
+                level = 1,
+                cost = 1,
+                imageUrl = "https://ws-tcg.com/wp/wp-content/cardlist/cardimages/DDD/S97/DDD-S97-002.png"
+            ),
+            WsCard(
+                id = "ddd-s97-003",
+                seriesId = "ddd-s97",
+                cardCode = "DDD/S97-003",
+                title = "Energetic Assistant, Nagisa",
+                rarity = Rarity.UNCOMMON,
+                description = "Nagisa keeps spirits high for the new detective team.",
+                color = "GREEN",
+                level = 0,
+                cost = 0,
+                imageUrl = "https://ws-tcg.com/wp/wp-content/cardlist/cardimages/DDD/S97/DDD-S97-003.png"
+            ),
+            WsCard(
+                id = "ddd-s97-004",
+                seriesId = "ddd-s97",
+                cardCode = "DDD/S97-004",
+                title = "Mysterious Idol, Yui",
+                rarity = Rarity.SUPER_RARE,
+                description = "Yui steps onto the stage with a secret mission.",
+                color = "RED",
                 level = 2,
                 cost = 1,
-                imageUrl = null,
-                wishlistCount = 1
+                imageUrl = "https://ws-tcg.com/wp/wp-content/cardlist/cardimages/DDD/S97/DDD-S97-004.png"
             ),
             WsCard(
-                id = "holo-vol2-001",
-                seriesId = "hololive-vol2",
-                cardCode = "HOL/WE36-001",
-                title = "Secret Society holoX, La+ Darknesss",
-                rarity = Rarity.SPECIAL,
-                description = "The leader of holoX makes a mysterious entrance.",
-                color = "PURPLE",
-                level = 3,
-                cost = 2,
-                imageUrl = null
-            ),
-            WsCard(
-                id = "holo-vol2-002",
-                seriesId = "hololive-vol2",
-                cardCode = "HOL/WE36-002",
-                title = "Idol of the Stars, Hoshimachi Suisei",
+                id = "ddd-s97-005",
+                seriesId = "ddd-s97",
+                cardCode = "DDD/S97-005",
+                title = "Shadow Operative, Hel",
                 rarity = Rarity.SUPER_RARE,
-                description = "Suisei sings with a shining stage presence.",
+                description = "Hel manipulates events from the darkness.",
                 color = "BLUE",
-                level = 3,
+                level = 2,
                 cost = 2,
-                imageUrl = null,
-                wishlistCount = 2
+                imageUrl = "https://ws-tcg.com/wp/wp-content/cardlist/cardimages/DDD/S97/DDD-S97-005.png"
             ),
             WsCard(
-                id = "ba-001",
-                seriesId = "blue-archive",
-                cardCode = "BA/WE31-001",
-                title = "Gourmet Research, Yuuka",
+                id = "ddd-s97-006",
+                seriesId = "ddd-s97",
+                cardCode = "DDD/S97-006",
+                title = "Tactical Support, Char",
                 rarity = Rarity.UNCOMMON,
-                description = "The meticulous treasurer of the Gourmet Research Club.",
+                description = "Char keeps the team coordinated from behind the scenes.",
                 color = "YELLOW",
                 level = 1,
                 cost = 0,
-                imageUrl = null,
-                ownedCount = 5
+                imageUrl = "https://ws-tcg.com/wp/wp-content/cardlist/cardimages/DDD/S97/DDD-S97-006.png"
             ),
             WsCard(
-                id = "ba-002",
-                seriesId = "blue-archive",
-                cardCode = "BA/WE31-002",
-                title = "After-School Sweets Club, Azusa",
+                id = "sfn-s108-001",
+                seriesId = "sfn-s108",
+                cardCode = "SFN/S108-001",
+                title = "Producer in Everyday Clothes, Megumi",
+                rarity = Rarity.RARE,
+                description = "Megumi coordinates Blessing Software with gentle resolve.",
+                color = "BLUE",
+                level = 1,
+                cost = 0,
+                imageUrl = "https://ws-tcg.com/wp/wp-content/cardlist/cardimages/SFN/S108/SFN-S108-001.png"
+            ),
+            WsCard(
+                id = "sfn-s108-002",
+                seriesId = "sfn-s108",
+                cardCode = "SFN/S108-002",
+                title = "Scenario Rewrite, Utaha",
                 rarity = Rarity.SUPER_RARE,
-                description = "Azusa enjoys desserts after missions.",
+                description = "Utaha polishes the screenplay with unwavering confidence.",
                 color = "RED",
+                level = 3,
+                cost = 2,
+                imageUrl = "https://ws-tcg.com/wp/wp-content/cardlist/cardimages/SFN/S108/SFN-S108-002.png"
+            ),
+            WsCard(
+                id = "sfn-s108-003",
+                seriesId = "sfn-s108",
+                cardCode = "SFN/S108-003",
+                title = "Illustrator's Determination, Eriri",
+                rarity = Rarity.SUPER_RARE,
+                description = "Eriri stays up all night refining her key visuals.",
+                color = "YELLOW",
                 level = 2,
                 cost = 2,
-                imageUrl = null
+                imageUrl = "https://ws-tcg.com/wp/wp-content/cardlist/cardimages/SFN/S108/SFN-S108-003.png"
             ),
             WsCard(
-                id = "ba-003",
-                seriesId = "blue-archive",
-                cardCode = "BA/WE31-003",
-                title = "On-the-Job Spirit, Aru",
-                rarity = Rarity.RARE,
-                description = "Aru brings energy to the Problem Solver 68 squad.",
+                id = "sfn-s108-004",
+                seriesId = "sfn-s108",
+                cardCode = "SFN/S108-004",
+                title = "Stage Performer, Michiru",
+                rarity = Rarity.UNCOMMON,
+                description = "Michiru livens up the party with her guitar riffs.",
                 color = "GREEN",
                 level = 1,
                 cost = 1,
-                imageUrl = null,
-                wishlistCount = 1
+                imageUrl = "https://ws-tcg.com/wp/wp-content/cardlist/cardimages/SFN/S108/SFN-S108-004.png"
+            ),
+            WsCard(
+                id = "sfn-s108-005",
+                seriesId = "sfn-s108",
+                cardCode = "SFN/S108-005",
+                title = "Return of the Rival, Izumi",
+                rarity = Rarity.UNCOMMON,
+                description = "Izumi brings fresh competition to Megumi's plans.",
+                color = "BLUE",
+                level = 0,
+                cost = 0,
+                imageUrl = "https://ws-tcg.com/wp/wp-content/cardlist/cardimages/SFN/S108/SFN-S108-005.png"
+            ),
+            WsCard(
+                id = "sfn-s108-006",
+                seriesId = "sfn-s108",
+                cardCode = "SFN/S108-006",
+                title = "Blessing Software's Future, Megumi",
+                rarity = Rarity.SPECIAL,
+                description = "Megumi smiles toward the finished movie project.",
+                color = "BLUE",
+                level = 3,
+                cost = 2,
+                imageUrl = "https://ws-tcg.com/wp/wp-content/cardlist/cardimages/SFN/S108/SFN-S108-006.png"
             )
         )
     }

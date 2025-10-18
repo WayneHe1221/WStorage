@@ -1,120 +1,162 @@
 {
   "series": [
     {
-      "id": "sao-10th",
-      "name": "Sword Art Online 10th Anniversary",
-      "setCode": "SAO/S100",
-      "releaseYear": 2023
+      "id": "ddd-s97",
+      "name": "The Detective Is Already Dead",
+      "setCode": "DDD/S97",
+      "releaseYear": 2021
     },
     {
-      "id": "hololive-vol2",
-      "name": "hololive production Vol.2",
-      "setCode": "HOL/WE36",
-      "releaseYear": 2024
-    },
-    {
-      "id": "blue-archive",
-      "name": "Blue Archive",
-      "setCode": "BA/WE31",
-      "releaseYear": 2024
+      "id": "sfn-s108",
+      "name": "Saekano the Movie: Finale",
+      "setCode": "SFN/S108",
+      "releaseYear": 2022
     }
   ],
   "cards": [
     {
-      "id": "sao-10th-001",
-      "seriesId": "sao-10th",
-      "cardCode": "SAO/S100-001",
-      "title": "Starry Night Encounter",
+      "id": "ddd-s97-001",
+      "seriesId": "ddd-s97",
+      "cardCode": "DDD/S97-001",
+      "title": "Legendary Detective, Siesta",
       "rarity": "SR",
-      "description": "Kazuto and Asuna under a starlit sky.",
+      "description": "Siesta fearlessly confronts the case with perfect composure.",
       "color": "BLUE",
       "level": 3,
       "cost": 2,
-      "imageUrl": "https://example.com/sao100-001.jpg"
+      "imageUrl": "https://ws-tcg.com/wp/wp-content/cardlist/cardimages/DDD/S97/DDD-S97-001.png"
     },
     {
-      "id": "sao-10th-002",
-      "seriesId": "sao-10th",
-      "cardCode": "SAO/S100-002",
-      "title": "Lightning Flash Parry",
+      "id": "ddd-s97-002",
+      "seriesId": "ddd-s97",
+      "cardCode": "DDD/S97-002",
+      "title": "Reluctant Sidekick, Kimihiko",
       "rarity": "R",
-      "description": "Asuna counters with breathtaking speed.",
+      "description": "Kimihiko is pulled back onto the stage of adventure.",
       "color": "YELLOW",
+      "level": 1,
+      "cost": 1,
+      "imageUrl": "https://ws-tcg.com/wp/wp-content/cardlist/cardimages/DDD/S97/DDD-S97-002.png"
+    },
+    {
+      "id": "ddd-s97-003",
+      "seriesId": "ddd-s97",
+      "cardCode": "DDD/S97-003",
+      "title": "Energetic Assistant, Nagisa",
+      "rarity": "U",
+      "description": "Nagisa keeps spirits high for the new detective team.",
+      "color": "GREEN",
+      "level": 0,
+      "cost": 0,
+      "imageUrl": "https://ws-tcg.com/wp/wp-content/cardlist/cardimages/DDD/S97/DDD-S97-003.png"
+    },
+    {
+      "id": "ddd-s97-004",
+      "seriesId": "ddd-s97",
+      "cardCode": "DDD/S97-004",
+      "title": "Mysterious Idol, Yui",
+      "rarity": "SR",
+      "description": "Yui steps onto the stage with a secret mission.",
+      "color": "RED",
       "level": 2,
       "cost": 1,
-      "imageUrl": "https://example.com/sao100-002.jpg"
+      "imageUrl": "https://ws-tcg.com/wp/wp-content/cardlist/cardimages/DDD/S97/DDD-S97-004.png"
     },
     {
-      "id": "hololive-vol2-001",
-      "seriesId": "hololive-vol2",
-      "cardCode": "HOL/WE36-001",
-      "title": "Secret Society holoX",
-      "rarity": "SP",
-      "description": "La+ orchestrates a dramatic entrance.",
-      "color": "PURPLE",
-      "level": 3,
-      "cost": 2,
-      "imageUrl": "https://example.com/holowe36-001.jpg"
-    },
-    {
-      "id": "hololive-vol2-002",
-      "seriesId": "hololive-vol2",
-      "cardCode": "HOL/WE36-002",
-      "title": "Idol of the Stars",
+      "id": "ddd-s97-005",
+      "seriesId": "ddd-s97",
+      "cardCode": "DDD/S97-005",
+      "title": "Shadow Operative, Hel",
       "rarity": "SR",
-      "description": "Suisei captivates the audience.",
+      "description": "Hel manipulates events from the darkness.",
       "color": "BLUE",
-      "level": 3,
+      "level": 2,
       "cost": 2,
-      "imageUrl": "https://example.com/holowe36-002.jpg"
+      "imageUrl": "https://ws-tcg.com/wp/wp-content/cardlist/cardimages/DDD/S97/DDD-S97-005.png"
     },
     {
-      "id": "ba-001",
-      "seriesId": "blue-archive",
-      "cardCode": "BA/WE31-001",
-      "title": "Tactical Treasurer",
+      "id": "ddd-s97-006",
+      "seriesId": "ddd-s97",
+      "cardCode": "DDD/S97-006",
+      "title": "Tactical Support, Char",
       "rarity": "U",
-      "description": "Yuuka balances the books with precision.",
+      "description": "Char keeps the team coordinated from behind the scenes.",
       "color": "YELLOW",
       "level": 1,
       "cost": 0,
-      "imageUrl": "https://example.com/bawe31-001.jpg"
+      "imageUrl": "https://ws-tcg.com/wp/wp-content/cardlist/cardimages/DDD/S97/DDD-S97-006.png"
     },
     {
-      "id": "ba-002",
-      "seriesId": "blue-archive",
-      "cardCode": "BA/WE31-002",
-      "title": "After-School Sweets Club",
+      "id": "sfn-s108-001",
+      "seriesId": "sfn-s108",
+      "cardCode": "SFN/S108-001",
+      "title": "Producer in Everyday Clothes, Megumi",
+      "rarity": "R",
+      "description": "Megumi coordinates Blessing Software with gentle resolve.",
+      "color": "BLUE",
+      "level": 1,
+      "cost": 0,
+      "imageUrl": "https://ws-tcg.com/wp/wp-content/cardlist/cardimages/SFN/S108/SFN-S108-001.png"
+    },
+    {
+      "id": "sfn-s108-002",
+      "seriesId": "sfn-s108",
+      "cardCode": "SFN/S108-002",
+      "title": "Scenario Rewrite, Utaha",
       "rarity": "SR",
-      "description": "Azusa enjoys desserts after missions.",
+      "description": "Utaha polishes the screenplay with unwavering confidence.",
       "color": "RED",
+      "level": 3,
+      "cost": 2,
+      "imageUrl": "https://ws-tcg.com/wp/wp-content/cardlist/cardimages/SFN/S108/SFN-S108-002.png"
+    },
+    {
+      "id": "sfn-s108-003",
+      "seriesId": "sfn-s108",
+      "cardCode": "SFN/S108-003",
+      "title": "Illustrator's Determination, Eriri",
+      "rarity": "SR",
+      "description": "Eriri stays up all night refining her key visuals.",
+      "color": "YELLOW",
       "level": 2,
       "cost": 2,
-      "imageUrl": "https://example.com/bawe31-002.jpg"
+      "imageUrl": "https://ws-tcg.com/wp/wp-content/cardlist/cardimages/SFN/S108/SFN-S108-003.png"
     },
     {
-      "id": "ba-003",
-      "seriesId": "blue-archive",
-      "cardCode": "BA/WE31-003",
-      "title": "On-the-Job Spirit",
-      "rarity": "R",
-      "description": "Aru rallies the Problem Solver 68 squad.",
+      "id": "sfn-s108-004",
+      "seriesId": "sfn-s108",
+      "cardCode": "SFN/S108-004",
+      "title": "Stage Performer, Michiru",
+      "rarity": "U",
+      "description": "Michiru livens up the party with her guitar riffs.",
       "color": "GREEN",
       "level": 1,
       "cost": 1,
-      "imageUrl": "https://example.com/bawe31-003.jpg"
+      "imageUrl": "https://ws-tcg.com/wp/wp-content/cardlist/cardimages/SFN/S108/SFN-S108-004.png"
     },
     {
-      "id": "ba-004",
-      "seriesId": "blue-archive",
-      "cardCode": "BA/WE31-004",
-      "title": "Pro Gamer Mutsuki",
-      "rarity": "C",
-      "description": "Mutsuki clears missions with gamer precision.",
-      "color": "RED",
+      "id": "sfn-s108-005",
+      "seriesId": "sfn-s108",
+      "cardCode": "SFN/S108-005",
+      "title": "Return of the Rival, Izumi",
+      "rarity": "U",
+      "description": "Izumi brings fresh competition to Megumi's plans.",
+      "color": "BLUE",
       "level": 0,
       "cost": 0,
-      "imageUrl": "https://example.com/bawe31-004.jpg"
+      "imageUrl": "https://ws-tcg.com/wp/wp-content/cardlist/cardimages/SFN/S108/SFN-S108-005.png"
+    },
+    {
+      "id": "sfn-s108-006",
+      "seriesId": "sfn-s108",
+      "cardCode": "SFN/S108-006",
+      "title": "Blessing Software's Future, Megumi",
+      "rarity": "SP",
+      "description": "Megumi smiles toward the finished movie project.",
+      "color": "BLUE",
+      "level": 3,
+      "cost": 2,
+      "imageUrl": "https://ws-tcg.com/wp/wp-content/cardlist/cardimages/SFN/S108/SFN-S108-006.png"
     }
   ]
 }

@@ -1,0 +1,82 @@
+{
+  "series": {
+    "id": "sfn-s108",
+    "name": "Saekano the Movie: Finale",
+    "setCode": "SFN/S108",
+    "releaseYear": 2022
+  },
+  "cards": [
+    {
+      "id": "sfn-s108-001",
+      "seriesId": "sfn-s108",
+      "cardCode": "SFN/S108-001",
+      "title": "Producer in Everyday Clothes, Megumi",
+      "rarity": "R",
+      "description": "Megumi coordinates Blessing Software with gentle resolve.",
+      "color": "BLUE",
+      "level": 1,
+      "cost": 0,
+      "imageUrl": "https://ws-tcg.com/wp/wp-content/cardlist/cardimages/SFN/S108/SFN-S108-001.png"
+    },
+    {
+      "id": "sfn-s108-002",
+      "seriesId": "sfn-s108",
+      "cardCode": "SFN/S108-002",
+      "title": "Scenario Rewrite, Utaha",
+      "rarity": "SR",
+      "description": "Utaha polishes the screenplay with unwavering confidence.",
+      "color": "RED",
+      "level": 3,
+      "cost": 2,
+      "imageUrl": "https://ws-tcg.com/wp/wp-content/cardlist/cardimages/SFN/S108/SFN-S108-002.png"
+    },
+    {
+      "id": "sfn-s108-003",
+      "seriesId": "sfn-s108",
+      "cardCode": "SFN/S108-003",
+      "title": "Illustrator's Determination, Eriri",
+      "rarity": "SR",
+      "description": "Eriri stays up all night refining her key visuals.",
+      "color": "YELLOW",
+      "level": 2,
+      "cost": 2,
+      "imageUrl": "https://ws-tcg.com/wp/wp-content/cardlist/cardimages/SFN/S108/SFN-S108-003.png"
+    },
+    {
+      "id": "sfn-s108-004",
+      "seriesId": "sfn-s108",
+      "cardCode": "SFN/S108-004",
+      "title": "Stage Performer, Michiru",
+      "rarity": "U",
+      "description": "Michiru livens up the party with her guitar riffs.",
+      "color": "GREEN",
+      "level": 1,
+      "cost": 1,
+      "imageUrl": "https://ws-tcg.com/wp/wp-content/cardlist/cardimages/SFN/S108/SFN-S108-004.png"
+    },
+    {
+      "id": "sfn-s108-005",
+      "seriesId": "sfn-s108",
+      "cardCode": "SFN/S108-005",
+      "title": "Return of the Rival, Izumi",
+      "rarity": "U",
+      "description": "Izumi brings fresh competition to Megumi's plans.",
+      "color": "BLUE",
+      "level": 0,
+      "cost": 0,
+      "imageUrl": "https://ws-tcg.com/wp/wp-content/cardlist/cardimages/SFN/S108/SFN-S108-005.png"
+    },
+    {
+      "id": "sfn-s108-006",
+      "seriesId": "sfn-s108",
+      "cardCode": "SFN/S108-006",
+      "title": "Blessing Software's Future, Megumi",
+      "rarity": "SP",
+      "description": "Megumi smiles toward the finished movie project.",
+      "color": "BLUE",
+      "level": 3,
+      "cost": 2,
+      "imageUrl": "https://ws-tcg.com/wp/wp-content/cardlist/cardimages/SFN/S108/SFN-S108-006.png"
+    }
+  ]
+}

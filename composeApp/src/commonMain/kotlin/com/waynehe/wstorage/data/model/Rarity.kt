@@ -1,22 +1,13 @@
 package com.waynehe.wstorage.data.model
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
+enum class Rarity(val code: String) {
+    COMMON("C"),
+    UNCOMMON("U"),
+    RARE("R"),
+    SUPER_RARE("SR"),
+    SPECIAL("SP");
 
-@Serializable
-enum class Rarity {
-    @SerialName("C")
-    COMMON,
-
-    @SerialName("U")
-    UNCOMMON,
-
-    @SerialName("R")
-    RARE,
-
-    @SerialName("SR")
-    SUPER_RARE,
-
-    @SerialName("SP")
-    SPECIAL
+    companion object {
+        fun fromCode(value: String): Rarity? = entries.firstOrNull { it.code.equals(value, ignoreCase = true) }
+    }
 }

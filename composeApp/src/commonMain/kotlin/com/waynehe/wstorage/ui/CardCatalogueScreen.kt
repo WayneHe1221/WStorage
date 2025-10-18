@@ -77,6 +77,8 @@ fun CardCatalogueScreen(
             onSeriesSelected = presenter::onSeriesSelected
         )
 
+        val errorMessage = uiState.errorMessage
+
         when {
             uiState.isLoading && uiState.cards.isEmpty() -> {
                 Box(
@@ -89,7 +91,7 @@ fun CardCatalogueScreen(
                 }
             }
 
-            uiState.errorMessage != null -> {
+            errorMessage != null -> {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -97,7 +99,7 @@ fun CardCatalogueScreen(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = uiState.errorMessage,
+                        text = errorMessage,
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.error
                     )

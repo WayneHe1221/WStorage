@@ -10,8 +10,15 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
-import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.buildJsonArray
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.contentOrNull
+import kotlinx.serialization.json.intOrNull
+import kotlinx.serialization.json.jsonArray
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
+import kotlinx.serialization.json.put
 
 class SettingsInventoryRepository(
     private val settings: Settings,
@@ -89,7 +96,18 @@ class SettingsInventoryRepository(
             if (serializable.isEmpty()) {
                 settings.remove(STORAGE_KEY)
             } else {
-                val encoded = json.encodeToString(ListSerializer(InventoryEntry.serializer()), serializable)
+                val payload = buildJsonArray {
+                    serializable.forEach { entry ->
+                        add(
+                            buildJsonObject {
+                                put("cardId", entry.cardId)
+                                put("ownedCount", entry.ownedCount)
+                                put("wishlistCount", entry.wishlistCount)
+                            }
+                        )
+                    }
+                }
+                val encoded = json.encodeToString(payload)
                 settings.putString(STORAGE_KEY, encoded)
             }
         }
@@ -98,8 +116,14 @@ class SettingsInventoryRepository(
     private fun readFromStorage(): Map<String, InventoryEntry> {
         val raw = settings.getStringOrNull(STORAGE_KEY) ?: return emptyMap()
         return runCatching {
-            val decoded = json.decodeFromString(ListSerializer(InventoryEntry.serializer()), raw)
-            decoded.map { it.sanitized() }.associateBy { it.cardId }
+            val element = json.parseToJsonElement(raw)
+            element.jsonArray.mapNotNull { entryElement ->
+                val obj = entryElement.jsonObject
+                val cardId = obj["cardId"]?.jsonPrimitive?.contentOrNull ?: return@mapNotNull null
+                val owned = obj["ownedCount"]?.jsonPrimitive?.intOrNull ?: 0
+                val wishlist = obj["wishlistCount"]?.jsonPrimitive?.intOrNull ?: 0
+                InventoryEntry(cardId, owned, wishlist).sanitized()
+            }.associateBy { it.cardId }
         }.getOrDefault(emptyMap())
     }
 

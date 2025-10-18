@@ -1,20 +1,33 @@
 package com.waynehe.wstorage.data.repository
 
+import com.waynehe.wstorage.data.model.CardDataBundle
 import com.waynehe.wstorage.data.model.CardPage
 import com.waynehe.wstorage.data.model.Rarity
 import com.waynehe.wstorage.data.model.WsCard
 import com.waynehe.wstorage.data.model.WsSeries
+import kotlinx.serialization.SerializationException
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.intOrNull
+import kotlinx.serialization.json.contentOrNull
 import kotlin.math.min
 
 class InMemoryCardRepository(
-    private val series: List<WsSeries> = defaultSeries,
-    private val cards: List<WsCard> = defaultCards
+    private val resourcePath: String = DEFAULT_RESOURCE_PATH,
+    private val json: Json = defaultJson,
+    private val fallbackSeries: List<WsSeries> = defaultSeries,
+    private val fallbackCards: List<WsCard> = defaultCards
 ) : CardRepository {
 
-    override fun getAllSeries(): List<WsSeries> = series.sortedBy { it.name }
+    private val cachedData: CardData by lazy { loadCardData() }
+
+    override fun getAllSeries(): List<WsSeries> = cachedData.series.sortedBy { it.name }
 
     override fun getCardsBySeries(seriesId: String, page: Int, pageSize: Int): CardPage {
-        val filtered = cards.filter { it.seriesId == seriesId }
+        val filtered = cachedData.cards.filter { it.seriesId == seriesId }
         return buildPage(filtered, page, pageSize)
     }
 
@@ -23,7 +36,7 @@ class InMemoryCardRepository(
             return CardPage(emptyList(), page, pageSize, totalCount = 0, hasMore = false)
         }
         val normalizedKeyword = keyword.trim().lowercase()
-        val filtered = cards.filter { card ->
+        val filtered = cachedData.cards.filter { card ->
             card.title.lowercase().contains(normalizedKeyword) ||
                 card.cardCode.lowercase().contains(normalizedKeyword)
         }
@@ -49,7 +62,87 @@ class InMemoryCardRepository(
         return CardPage(items, page, pageSize, totalCount = source.size, hasMore = hasMore)
     }
 
+    private fun loadCardData(): CardData {
+        val rawJson = CardResourceReader.readText(resourcePath)
+        if (rawJson != null) {
+            try {
+                val bundle = parseCardBundle(rawJson)
+                if (bundle != null && (bundle.series.isNotEmpty() || bundle.cards.isNotEmpty())) {
+                    val series = if (bundle.series.isNotEmpty()) bundle.series else fallbackSeries
+                    val cards = if (bundle.cards.isNotEmpty()) bundle.cards else fallbackCards
+                    return CardData(series, cards)
+                }
+            } catch (error: SerializationException) {
+                // Ignore malformed JSON and use the fallback data below.
+            } catch (error: IllegalArgumentException) {
+                // Ignore and fall back to embedded data.
+            }
+        }
+        return CardData(fallbackSeries, fallbackCards)
+    }
+
+    private fun parseCardBundle(rawJson: String): CardDataBundle? {
+        val root = json.parseToJsonElement(rawJson)
+        val obj = root as? JsonObject ?: return null
+        val series = obj.safeArray("series")?.mapNotNull(::parseSeries).orEmpty()
+        val cards = obj.safeArray("cards")?.mapNotNull(::parseCard).orEmpty()
+        return CardDataBundle(series, cards)
+    }
+
+    private fun parseSeries(element: JsonElement): WsSeries? {
+        val obj = element as? JsonObject ?: return null
+        val id = obj.string("id") ?: return null
+        val name = obj.string("name") ?: return null
+        val setCode = obj.string("setCode") ?: return null
+        val releaseYear = obj.int("releaseYear") ?: return null
+        return WsSeries(id, name, setCode, releaseYear)
+    }
+
+    private fun parseCard(element: JsonElement): WsCard? {
+        val obj = element as? JsonObject ?: return null
+        val id = obj.string("id") ?: return null
+        val seriesId = obj.string("seriesId") ?: return null
+        val cardCode = obj.string("cardCode") ?: return null
+        val title = obj.string("title") ?: return null
+        val rarityCode = obj.string("rarity") ?: return null
+        val rarity = Rarity.fromCode(rarityCode) ?: return null
+        val description = obj.string("description") ?: ""
+        val color = obj.string("color")?.ifBlank { null }
+        val level = obj.int("level")
+        val cost = obj.int("cost")
+        val imageUrl = obj.string("imageUrl")?.ifBlank { null }
+        return WsCard(
+            id = id,
+            seriesId = seriesId,
+            cardCode = cardCode,
+            title = title,
+            rarity = rarity,
+            description = description,
+            color = color,
+            level = level,
+            cost = cost,
+            imageUrl = imageUrl
+        )
+    }
+
+    private fun JsonObject.safeArray(key: String): JsonArray? = (this[key] as? JsonArray)
+
+    private fun JsonObject.string(key: String): String? = (this[key] as? JsonPrimitive)?.contentOrNull
+
+    private fun JsonObject.int(key: String): Int? = (this[key] as? JsonPrimitive)?.intOrNull
+
+    private data class CardData(
+        val series: List<WsSeries>,
+        val cards: List<WsCard>
+    )
+
     companion object {
+        private const val DEFAULT_RESOURCE_PATH = "cards.json"
+
+        private val defaultJson = Json {
+            ignoreUnknownKeys = true
+        }
+
         private val defaultSeries = listOf(
             WsSeries(
                 id = "sao-10th",
@@ -79,6 +172,9 @@ class InMemoryCardRepository(
                 title = "Dual Wielder, Kirito",
                 rarity = Rarity.SUPER_RARE,
                 description = "Protagonist of SAO with dual wielding ability.",
+                color = "BLACK",
+                level = 3,
+                cost = 2,
                 imageUrl = null
             ),
             WsCard(
@@ -88,6 +184,9 @@ class InMemoryCardRepository(
                 title = "Flash of the Blue, Asuna",
                 rarity = Rarity.RARE,
                 description = "Asuna ready to support the front lines.",
+                color = "BLUE",
+                level = 2,
+                cost = 1,
                 imageUrl = null
             ),
             WsCard(
@@ -97,6 +196,9 @@ class InMemoryCardRepository(
                 title = "Secret Society holoX, La+ Darknesss",
                 rarity = Rarity.SPECIAL,
                 description = "The leader of holoX makes a mysterious entrance.",
+                color = "PURPLE",
+                level = 3,
+                cost = 2,
                 imageUrl = null
             ),
             WsCard(
@@ -106,6 +208,9 @@ class InMemoryCardRepository(
                 title = "Idol of the Stars, Hoshimachi Suisei",
                 rarity = Rarity.SUPER_RARE,
                 description = "Suisei sings with a shining stage presence.",
+                color = "BLUE",
+                level = 3,
+                cost = 2,
                 imageUrl = null
             ),
             WsCard(
@@ -115,6 +220,9 @@ class InMemoryCardRepository(
                 title = "Gourmet Research, Yuuka",
                 rarity = Rarity.UNCOMMON,
                 description = "The meticulous treasurer of the Gourmet Research Club.",
+                color = "YELLOW",
+                level = 1,
+                cost = 0,
                 imageUrl = null
             ),
             WsCard(
@@ -124,6 +232,9 @@ class InMemoryCardRepository(
                 title = "After-School Sweets Club, Azusa",
                 rarity = Rarity.SUPER_RARE,
                 description = "Azusa enjoys desserts after missions.",
+                color = "RED",
+                level = 2,
+                cost = 2,
                 imageUrl = null
             ),
             WsCard(
@@ -133,6 +244,9 @@ class InMemoryCardRepository(
                 title = "On-the-Job Spirit, Aru",
                 rarity = Rarity.RARE,
                 description = "Aru brings energy to the Problem Solver 68 squad.",
+                color = "GREEN",
+                level = 1,
+                cost = 1,
                 imageUrl = null
             )
         )

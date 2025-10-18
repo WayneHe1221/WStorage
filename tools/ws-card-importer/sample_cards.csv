@@ -1,0 +1,9 @@
+series_id,series_name,set_code,release_year,card_id,card_code,title,rarity,description,color,level,cost,image_url
+sao-10th,Sword Art Online 10th Anniversary,SAO/S100,2023,sao-10th-001,SAO/S100-001,Starry Night Encounter,SR,Kazuto and Asuna under a starlit sky.,BLUE,3,2,https://example.com/sao100-001.jpg
+sao-10th,Sword Art Online 10th Anniversary,SAO/S100,2023,sao-10th-002,SAO/S100-002,Lightning Flash Parry,R,Asuna counters with breathtaking speed.,YELLOW,2,1,https://example.com/sao100-002.jpg
+hololive-vol2,hololive production Vol.2,HOL/WE36,2024,hololive-vol2-001,HOL/WE36-001,Secret Society holoX, SP,La+ orchestrates a dramatic entrance.,PURPLE,3,2,https://example.com/holowe36-001.jpg
+hololive-vol2,hololive production Vol.2,HOL/WE36,2024,hololive-vol2-002,HOL/WE36-002,Idol of the Stars, SR,Suisei captivates the audience.,BLUE,3,2,https://example.com/holowe36-002.jpg
+blue-archive,Blue Archive,BA/WE31,2024,ba-001,BA/WE31-001,Tactical Treasurer, U,Yuuka balances the books with precision.,YELLOW,1,0,https://example.com/bawe31-001.jpg
+blue-archive,Blue Archive,BA/WE31,2024,ba-002,BA/WE31-002,After-School Sweets Club, SR,Azusa enjoys desserts after missions.,RED,2,2,https://example.com/bawe31-002.jpg
+blue-archive,Blue Archive,BA/WE31,2024,ba-003,BA/WE31-003,On-the-Job Spirit, R,Aru rallies the Problem Solver 68 squad.,GREEN,1,1,https://example.com/bawe31-003.jpg
+blue-archive,Blue Archive,BA/WE31,2024,ba-004,BA/WE31-004,Pro Gamer Mutsuki, C,Mutsuki clears missions with gamer precision.,RED,0,0,https://example.com/bawe31-004.jpg

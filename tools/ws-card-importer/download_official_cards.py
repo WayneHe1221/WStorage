@@ -10,7 +10,6 @@ import sys
 from pathlib import Path
 from typing import Iterable, Sequence
 from urllib.error import URLError, HTTPError
-from urllib.parse import urljoin
 from urllib.request import Request, urlopen
 
 from cardlist_search import CardSearchClient, CardSearchError
@@ -294,23 +293,54 @@ def build_card_row(raw: object, series_id: str, set_code: str) -> CardRow | None
 
 
 def normalise_image_url(image_url: str | None, card_code: str, set_code: str) -> str | None:
+    canonical_url = build_default_image_url(card_code, set_code)
     if not image_url:
-        return build_default_image_url(card_code, set_code)
+        return canonical_url
     image_url = image_url.strip()
+    if not image_url:
+        return canonical_url
     if image_url.startswith("//"):
-        return "https:" + image_url
+        image_url = "https:" + image_url
     if image_url.startswith("http://") or image_url.startswith("https://"):
+        if "/cardlist/cardimages/" in image_url:
+            return canonical_url
         return image_url
-    base = "https://ws-tcg.com/wp/wp-content/cardlist/"
-    return urljoin(base, image_url)
+    return canonical_url
 
 
 def build_default_image_url(card_code: str, set_code: str) -> str:
-    sanitized = card_code.replace("/", "-")
-    parts = set_code.split("/")
-    if len(parts) == 2:
-        return f"https://ws-tcg.com/wp/wp-content/cardlist/cardimages/{parts[0]}/{parts[1]}/{sanitized}.png"
-    return f"https://ws-tcg.com/wp/wp-content/cardlist/cardimages/{set_code}/{sanitized}.png"
+    set_slug = _slugify_set_code(set_code)
+    card_slug = _slugify_card_code(card_code)
+    prefix = _first_alpha(set_slug) if set_slug else "card"
+    return (
+        "https://ws-tcg.com/wordpress/wp-content/images/cardlist/"
+        f"{prefix}/{set_slug}/{card_slug}.png"
+    )
+
+
+def _slugify_set_code(set_code: str) -> str:
+    value = set_code.lower().strip()
+    value = value.replace("/", "_")
+    return _collapse_identifier(value)
+
+
+def _slugify_card_code(card_code: str) -> str:
+    value = card_code.lower().strip()
+    value = value.replace("/", "_").replace("-", "_")
+    return _collapse_identifier(value)
+
+
+def _collapse_identifier(value: str) -> str:
+    value = re.sub(r"[^0-9a-z_]+", "_", value)
+    value = re.sub(r"_+", "_", value)
+    return value.strip("_")
+
+
+def _first_alpha(value: str) -> str:
+    for char in value:
+        if char.isalpha():
+            return char
+    return value[0] if value else "card"
 
 
 def build_description(raw: dict[str, object]) -> str:

@@ -61,3 +61,17 @@ python tools/ws-card-importer/download_official_cards.py DDD SFN --pretty
 The script falls back to the `offline/` directory when the network is unavailable or the
 official export cannot be reached. These JSON files contain curated snapshots for each
 set so that development can proceed even without internet access.
+
+### Refreshing offline snapshots
+
+When you successfully download new data (for example from a machine that can reach the
+official endpoint), run the helper below to rebuild the offline fallbacks bundled with
+the repository:
+
+```bash
+python tools/ws-card-importer/refresh_offline_data.py
+```
+
+The script rewrites `offline/ddd.json`, `offline/sfn.json`, and prints a summary of the
+cards captured for each set. Afterwards, execute `download_official_cards.py` to merge
+the refreshed datasets into `cards.json` for the app.

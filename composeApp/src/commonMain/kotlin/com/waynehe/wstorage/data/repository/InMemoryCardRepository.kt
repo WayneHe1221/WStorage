@@ -17,9 +17,7 @@ import kotlin.math.min
 
 class InMemoryCardRepository(
     private val resourcePath: String = DEFAULT_RESOURCE_PATH,
-    private val json: Json = defaultJson,
-    private val fallbackSeries: List<WsSeries> = defaultSeries,
-    private val fallbackCards: List<WsCard> = defaultCards
+    private val json: Json = defaultJson
 ) : CardRepository {
 
     private val cachedData: CardData by lazy { loadCardData() }
@@ -64,21 +62,20 @@ class InMemoryCardRepository(
 
     private fun loadCardData(): CardData {
         val rawJson = CardResourceReader.readText(resourcePath)
-        if (rawJson != null) {
-            try {
-                val bundle = parseCardBundle(rawJson)
-                if (bundle != null && (bundle.series.isNotEmpty() || bundle.cards.isNotEmpty())) {
-                    val series = if (bundle.series.isNotEmpty()) bundle.series else fallbackSeries
-                    val cards = if (bundle.cards.isNotEmpty()) bundle.cards else fallbackCards
-                    return CardData(series, cards)
-                }
-            } catch (error: SerializationException) {
-                // Ignore malformed JSON and use the fallback data below.
-            } catch (error: IllegalArgumentException) {
-                // Ignore and fall back to embedded data.
+            ?: throw IllegalStateException("Card data resource $resourcePath not found")
+        try {
+            val bundle = parseCardBundle(rawJson)
+                ?: throw IllegalStateException("Card data bundle is empty")
+            if (bundle.series.isEmpty()) {
+                throw IllegalStateException("Card data bundle does not include any series entries")
             }
+            if (bundle.cards.isEmpty()) {
+                throw IllegalStateException("Card data bundle does not include any card entries")
+            }
+            return CardData(bundle.series, bundle.cards)
+        } catch (error: SerializationException) {
+            throw IllegalStateException("Failed to parse card data", error)
         }
-        return CardData(fallbackSeries, fallbackCards)
     }
 
     private fun parseCardBundle(rawJson: String): CardDataBundle? {
@@ -146,167 +143,5 @@ class InMemoryCardRepository(
         private val defaultJson = Json {
             ignoreUnknownKeys = true
         }
-
-        private val defaultSeries = listOf(
-            WsSeries(
-                id = "ddd-s97",
-                name = "ダンダダン / DAN DA DAN",
-                setCode = "DDD/S97",
-                releaseYear = 2021
-            ),
-            WsSeries(
-                id = "sfn-s108",
-                name = "葬送のフリーレン / Frieren: Beyond Journey's End",
-                setCode = "SFN/S108",
-                releaseYear = 2022
-            )
-        )
-
-        private val defaultCards = listOf(
-            WsCard(
-                id = "ddd-s97-001",
-                seriesId = "ddd-s97",
-                cardCode = "DDD/S97-001",
-                title = "Legendary Detective, Siesta",
-                rarity = Rarity.SUPER_RARE,
-                description = "Siesta fearlessly confronts the case with perfect composure.",
-                color = "BLUE",
-                level = 3,
-                cost = 2,
-                imageUrl = "https://ws-tcg.com/wp/wp-content/cardlist/cardimages/DDD/S97/DDD-S97-001.png"
-            ),
-            WsCard(
-                id = "ddd-s97-002",
-                seriesId = "ddd-s97",
-                cardCode = "DDD/S97-002",
-                title = "Reluctant Sidekick, Kimihiko",
-                rarity = Rarity.RARE,
-                description = "Kimihiko is pulled back onto the stage of adventure.",
-                color = "YELLOW",
-                level = 1,
-                cost = 1,
-                imageUrl = "https://ws-tcg.com/wp/wp-content/cardlist/cardimages/DDD/S97/DDD-S97-002.png"
-            ),
-            WsCard(
-                id = "ddd-s97-003",
-                seriesId = "ddd-s97",
-                cardCode = "DDD/S97-003",
-                title = "Energetic Assistant, Nagisa",
-                rarity = Rarity.UNCOMMON,
-                description = "Nagisa keeps spirits high for the new detective team.",
-                color = "GREEN",
-                level = 0,
-                cost = 0,
-                imageUrl = "https://ws-tcg.com/wp/wp-content/cardlist/cardimages/DDD/S97/DDD-S97-003.png"
-            ),
-            WsCard(
-                id = "ddd-s97-004",
-                seriesId = "ddd-s97",
-                cardCode = "DDD/S97-004",
-                title = "Mysterious Idol, Yui",
-                rarity = Rarity.SUPER_RARE,
-                description = "Yui steps onto the stage with a secret mission.",
-                color = "RED",
-                level = 2,
-                cost = 1,
-                imageUrl = "https://ws-tcg.com/wp/wp-content/cardlist/cardimages/DDD/S97/DDD-S97-004.png"
-            ),
-            WsCard(
-                id = "ddd-s97-005",
-                seriesId = "ddd-s97",
-                cardCode = "DDD/S97-005",
-                title = "Shadow Operative, Hel",
-                rarity = Rarity.SUPER_RARE,
-                description = "Hel manipulates events from the darkness.",
-                color = "BLUE",
-                level = 2,
-                cost = 2,
-                imageUrl = "https://ws-tcg.com/wp/wp-content/cardlist/cardimages/DDD/S97/DDD-S97-005.png"
-            ),
-            WsCard(
-                id = "ddd-s97-006",
-                seriesId = "ddd-s97",
-                cardCode = "DDD/S97-006",
-                title = "Tactical Support, Char",
-                rarity = Rarity.UNCOMMON,
-                description = "Char keeps the team coordinated from behind the scenes.",
-                color = "YELLOW",
-                level = 1,
-                cost = 0,
-                imageUrl = "https://ws-tcg.com/wp/wp-content/cardlist/cardimages/DDD/S97/DDD-S97-006.png"
-            ),
-            WsCard(
-                id = "sfn-s108-001",
-                seriesId = "sfn-s108",
-                cardCode = "SFN/S108-001",
-                title = "Producer in Everyday Clothes, Megumi",
-                rarity = Rarity.RARE,
-                description = "Megumi coordinates Blessing Software with gentle resolve.",
-                color = "BLUE",
-                level = 1,
-                cost = 0,
-                imageUrl = "https://ws-tcg.com/wp/wp-content/cardlist/cardimages/SFN/S108/SFN-S108-001.png"
-            ),
-            WsCard(
-                id = "sfn-s108-002",
-                seriesId = "sfn-s108",
-                cardCode = "SFN/S108-002",
-                title = "Scenario Rewrite, Utaha",
-                rarity = Rarity.SUPER_RARE,
-                description = "Utaha polishes the screenplay with unwavering confidence.",
-                color = "RED",
-                level = 3,
-                cost = 2,
-                imageUrl = "https://ws-tcg.com/wp/wp-content/cardlist/cardimages/SFN/S108/SFN-S108-002.png"
-            ),
-            WsCard(
-                id = "sfn-s108-003",
-                seriesId = "sfn-s108",
-                cardCode = "SFN/S108-003",
-                title = "Illustrator's Determination, Eriri",
-                rarity = Rarity.SUPER_RARE,
-                description = "Eriri stays up all night refining her key visuals.",
-                color = "YELLOW",
-                level = 2,
-                cost = 2,
-                imageUrl = "https://ws-tcg.com/wp/wp-content/cardlist/cardimages/SFN/S108/SFN-S108-003.png"
-            ),
-            WsCard(
-                id = "sfn-s108-004",
-                seriesId = "sfn-s108",
-                cardCode = "SFN/S108-004",
-                title = "Stage Performer, Michiru",
-                rarity = Rarity.UNCOMMON,
-                description = "Michiru livens up the party with her guitar riffs.",
-                color = "GREEN",
-                level = 1,
-                cost = 1,
-                imageUrl = "https://ws-tcg.com/wp/wp-content/cardlist/cardimages/SFN/S108/SFN-S108-004.png"
-            ),
-            WsCard(
-                id = "sfn-s108-005",
-                seriesId = "sfn-s108",
-                cardCode = "SFN/S108-005",
-                title = "Return of the Rival, Izumi",
-                rarity = Rarity.UNCOMMON,
-                description = "Izumi brings fresh competition to Megumi's plans.",
-                color = "BLUE",
-                level = 0,
-                cost = 0,
-                imageUrl = "https://ws-tcg.com/wp/wp-content/cardlist/cardimages/SFN/S108/SFN-S108-005.png"
-            ),
-            WsCard(
-                id = "sfn-s108-006",
-                seriesId = "sfn-s108",
-                cardCode = "SFN/S108-006",
-                title = "Blessing Software's Future, Megumi",
-                rarity = Rarity.SPECIAL,
-                description = "Megumi smiles toward the finished movie project.",
-                color = "BLUE",
-                level = 3,
-                cost = 2,
-                imageUrl = "https://ws-tcg.com/wp/wp-content/cardlist/cardimages/SFN/S108/SFN-S108-006.png"
-            )
-        )
     }
 }

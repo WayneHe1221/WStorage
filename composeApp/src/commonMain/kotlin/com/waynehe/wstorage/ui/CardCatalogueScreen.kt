@@ -51,6 +51,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import coil3.compose.AsyncImage
 import coil3.request.CachePolicy
 import coil3.request.ImageRequest
+import coil3.request.httpHeaders
 import com.russhwolf.settings.Settings
 import com.waynehe.wstorage.data.model.InventoryEntry
 import com.waynehe.wstorage.data.model.Rarity
@@ -593,8 +594,8 @@ private fun CardThumbnail(card: CardSummary) {
         imageUrl?.takeIf { it.isNotBlank() }?.let {
             ImageRequest.Builder(context)
                 .data(it)
-                .headers {
-                    add("Referer", "https://ws-tcg.com/")
+                .httpHeaders {
+                    append("Referer", "https://ws-tcg.com/")
                 }
                 .diskCachePolicy(CachePolicy.ENABLED)
                 .memoryCachePolicy(CachePolicy.ENABLED)

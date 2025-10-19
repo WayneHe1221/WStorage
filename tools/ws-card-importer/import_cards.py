@@ -13,6 +13,12 @@ from urllib.request import urlopen
 from urllib.error import URLError
 import io
 
+# Paths used to keep platform assets in sync.
+REPO_ROOT = Path(__file__).resolve().parents[2]
+COMMON_RESOURCES_PATH = REPO_ROOT / "composeApp" / "src" / "commonMain" / "resources" / "cards.json"
+ANDROID_ASSETS_PATH = REPO_ROOT / "composeApp" / "src" / "androidMain" / "assets" / "cards.json"
+
+
 # Expected CSV headers.
 REQUIRED_COLUMNS = {
     "series_id",
@@ -66,6 +72,22 @@ class ExportBundle:
         if pretty:
             return json.dumps(data, indent=2, ensure_ascii=False)
         return json.dumps(data, separators=(",", ":"), ensure_ascii=False)
+
+
+def mirror_android_assets_if_applicable(output_path: Path, content: str) -> None:
+    """Mirror the generated JSON into the Android assets directory when using the default path."""
+
+    try:
+        if output_path.resolve() != COMMON_RESOURCES_PATH:
+            return
+        ANDROID_ASSETS_PATH.parent.mkdir(parents=True, exist_ok=True)
+        ANDROID_ASSETS_PATH.write_text(content, encoding="utf-8")
+        print(f"Mirrored card data to {ANDROID_ASSETS_PATH}")
+    except Exception as exc:  # pragma: no cover - filesystem edge cases
+        print(
+            f"Warning: unable to mirror card data to Android assets: {exc}",
+            file=sys.stderr,
+        )
 
 
 class CsvCardImporter:
@@ -187,6 +209,7 @@ def main(argv: t.Sequence[str]) -> int:
     output_path = Path(args.output)
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(output_text, encoding="utf-8")
+    mirror_android_assets_if_applicable(output_path, output_text)
     print(f"Wrote {len(bundle.series)} series and {len(bundle.cards)} cards to {output_path}")
     return 0
 

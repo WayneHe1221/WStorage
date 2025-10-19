@@ -69,6 +69,8 @@ in your IDE’s toolbar or open the [/iosApp](./iosApp) directory in Xcode and r
 ## Updating card data
 
 The application reads card metadata from [`composeApp/src/commonMain/resources/cards.json`](composeApp/src/commonMain/resources/cards.json).
+For Android builds the dataset is mirrored to [`composeApp/src/androidMain/assets/cards.json`](composeApp/src/androidMain/assets/cards.json)
+so the APK bundles the same data.
 Run the CSV importer in [`tools/ws-card-importer`](tools/ws-card-importer) whenever you need to refresh the dataset:
 
 ```bash

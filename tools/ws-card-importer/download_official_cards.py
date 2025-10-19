@@ -13,7 +13,7 @@ from urllib.error import URLError, HTTPError
 from urllib.parse import urljoin
 from urllib.request import Request, urlopen
 
-from import_cards import CardRow, ExportBundle, SeriesRow
+from import_cards import CardRow, ExportBundle, SeriesRow, mirror_android_assets_if_applicable
 
 USER_AGENT = (
     "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
@@ -82,6 +82,7 @@ def main(argv: Sequence[str]) -> int:
     output_text = merged.to_json(pretty=args.pretty)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(output_text, encoding="utf-8")
+    mirror_android_assets_if_applicable(args.output, output_text)
     print(
         f"Wrote {len(merged.series)} series and {len(merged.cards)} cards to {args.output}",
         file=sys.stderr,

@@ -34,9 +34,10 @@ From the project root:
 python tools/ws-card-importer/import_cards.py tools/ws-card-importer/sample_cards.csv
 ```
 
-By default the script writes to `composeApp/src/commonMain/resources/cards.json`. Use `--output`
-to write elsewhere, and `--pretty` for a formatted JSON file. The script automatically creates the
-output directory if it is missing.
+By default the script writes to `composeApp/src/commonMain/resources/cards.json`. When this default
+location is used the tool also mirrors the file to `composeApp/src/androidMain/assets/cards.json`
+so Android builds include the same dataset. Use `--output` to write elsewhere, and `--pretty` for a
+formatted JSON file. The script automatically creates the output directory if it is missing.
 
 When new data becomes available:
 
@@ -52,7 +53,8 @@ the importer. This keeps the script light-weight and avoids depending on fragile
 
 The repository also provides `download_official_cards.py`, a helper that reaches the
 official Weiss Schwarz card list export endpoint. It downloads the specified set codes
-and writes the aggregated data to `cards.json`:
+and writes the aggregated data to `cards.json` (mirroring to the Android assets directory
+when using the default location):
 
 ```bash
 python tools/ws-card-importer/download_official_cards.py DDD SFN --pretty

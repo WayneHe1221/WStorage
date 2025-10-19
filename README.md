@@ -83,6 +83,18 @@ Execute the command from the repository root. The script accepts either a local 
 consumed by the app. Refer to the tool’s [README](tools/ws-card-importer/README.md) for the expected
 CSV columns and additional options.
 
+For automated updates you can instead rely on the bundled crawler, which mirrors the website’s
+card search logic and assembles the configured sets into `cards.json`:
+
+```bash
+python tools/ws-card-importer/download_official_cards.py DDD SFN --language en
+```
+
+Pass `--language ja` to prefer the Japanese metadata exposed by the search endpoint. The helper
+tries the same AJAX search endpoint used by <https://ws-tcg.com/cardlist/search/>, falls back to the
+legacy pack export if necessary, and finally reuses the curated offline snapshots when no network
+requests succeed.
+
 To verify that your Python environment can compile the tooling without syntax errors, run:
 
 ```bash

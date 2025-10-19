@@ -13,6 +13,7 @@ from urllib.error import URLError, HTTPError
 from urllib.parse import urljoin
 from urllib.request import Request, urlopen
 
+from cardlist_search import CardSearchClient, CardSearchError
 from import_cards import CardRow, ExportBundle, SeriesRow, mirror_android_assets_if_applicable
 
 USER_AGENT = (
@@ -43,6 +44,10 @@ SET_NAME_OVERRIDES: dict[str, str] = {
 }
 
 
+_SEARCH_CLIENT: CardSearchClient | object | None = None
+_SEARCH_CLIENT_FAILED = object()
+
+
 def parse_args(argv: Sequence[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Download Weiss Schwarz card data")
     parser.add_argument(
@@ -56,6 +61,11 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
         type=Path,
         default=Path("composeApp/src/commonMain/resources/cards.json"),
         help="Destination of the aggregated cards.json file",
+    )
+    parser.add_argument(
+        "--language",
+        default="en",
+        help="Language code used for the search crawler (default: en)",
     )
     parser.add_argument(
         "--offline-dir",
@@ -73,9 +83,10 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
 
 def main(argv: Sequence[str]) -> int:
     args = parse_args(argv)
+    language = (args.language or "en").strip() or "en"
     bundles = []
     for set_code in args.sets:
-        bundle = load_set_bundle(set_code, args.offline_dir)
+        bundle = load_set_bundle(set_code, args.offline_dir, language)
         bundles.append(bundle)
 
     merged = merge_bundles(bundles)
@@ -90,10 +101,31 @@ def main(argv: Sequence[str]) -> int:
     return 0
 
 
-def load_set_bundle(set_code: str, offline_dir: Path) -> ExportBundle:
+def load_set_bundle(set_code: str, offline_dir: Path, language: str) -> ExportBundle:
+    search_error: Exception | None = None
+    try:
+        return fetch_from_search(set_code, language)
+    except CardSearchError as exc:
+        search_error = exc
+        print(
+            f"Warning: search crawler failed for {set_code}: {exc}. Falling back to export.",
+            file=sys.stderr,
+        )
+    except Exception as exc:  # pragma: no cover - unexpected runtime error
+        search_error = exc
+        print(
+            f"Warning: unexpected search error for {set_code}: {exc}. Falling back to export.",
+            file=sys.stderr,
+        )
+
     try:
         return fetch_from_official(set_code)
     except Exception as exc:  # pragma: no cover - network branch
+        if search_error:
+            print(
+                f"Note: card search also failed for {set_code}: {search_error}",
+                file=sys.stderr,
+            )
         print(
             f"Warning: could not download set {set_code}: {exc}. Using offline fallback.",
             file=sys.stderr,
@@ -115,6 +147,41 @@ def fetch_from_official(set_code: str) -> ExportBundle:
         raise RuntimeError(f"Invalid JSON payload for {set_code}: {error}") from error
 
     return parse_official_payload(payload, set_code)
+
+
+def fetch_from_search(set_code: str, language: str) -> ExportBundle:
+    client = _ensure_search_client()
+    try:
+        result = client.fetch_cards(set_code, language=language)
+    except CardSearchError:
+        raise
+
+    info = dict(result.info or {})
+    cards_raw = list(result.cards)
+    series_row = build_series_row(info, cards_raw, set_code)
+    cards = [
+        card
+        for raw in cards_raw
+        if (card := build_card_row(raw, series_row.id, series_row.setCode)) is not None
+    ]
+    if not cards:
+        raise CardSearchError(f"Search data for set {set_code} did not include any cards")
+    return ExportBundle(series=[series_row], cards=cards)
+
+
+def _ensure_search_client() -> CardSearchClient:
+    global _SEARCH_CLIENT
+    if isinstance(_SEARCH_CLIENT, CardSearchClient):
+        return _SEARCH_CLIENT
+    if _SEARCH_CLIENT is _SEARCH_CLIENT_FAILED:
+        raise CardSearchError("Card search crawler initialisation previously failed")
+    try:
+        client = CardSearchClient(user_agent=USER_AGENT)
+    except CardSearchError as error:
+        _SEARCH_CLIENT = _SEARCH_CLIENT_FAILED
+        raise
+    _SEARCH_CLIENT = client
+    return client
 
 
 def parse_official_payload(payload: object, set_code: str) -> ExportBundle:

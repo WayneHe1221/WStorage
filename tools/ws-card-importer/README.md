@@ -63,18 +63,23 @@ working directory.
 
 ## Downloading official datasets
 
-The repository also provides `download_official_cards.py`, a helper that reaches the
-official Weiss Schwarz card list export endpoint. It downloads the specified set codes
-and writes the aggregated data to `cards.json` (mirroring to the Android assets directory
-when using the default location):
+The repository also provides `download_official_cards.py`, a helper that mimics the
+official Weiss Schwarz card search flow. The script loads
+[`https://ws-tcg.com/cardlist/search/`](https://ws-tcg.com/cardlist/search/) to discover the
+same AJAX endpoint used by the website, issues the necessary paginated search requests for
+each set code, and finally falls back to the legacy pack export endpoint when needed. The
+merged data is written to `cards.json` (mirroring to the Android assets directory when
+using the default location):
 
 ```bash
-python tools/ws-card-importer/download_official_cards.py DDD SFN --pretty
+python tools/ws-card-importer/download_official_cards.py DDD SFN --language en --pretty
 ```
 
-The script falls back to the `offline/` directory when the network is unavailable or the
-official export cannot be reached. These JSON files contain curated snapshots for each
-set so that development can proceed even without internet access.
+Use `--language ja` to prefer the Japanese card names when the search endpoint exposes
+them. If neither the search API nor the pack export can be reached, the script falls back
+to the `offline/` directory. These JSON files contain curated snapshots for each set so
+that development can proceed even without internet access. Run the script with `--pretty`
+to produce formatted JSON while debugging the crawler output.
 
 ### Refreshing offline snapshots
 

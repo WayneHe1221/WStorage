@@ -316,6 +316,7 @@ def build_card_row(
 
     rarity = normalise_rarity(_first_str(raw, ["rarity", "rare", "rar"]))
     description = build_description(raw)
+    effect_text: str | None = None
     color = _first_str(raw, ["color", "colour", "card_color", "attribute"])
     level = parse_optional_int(_first_str(raw, ["level", "lv"]))
     cost = parse_optional_int(_first_str(raw, ["cost", "c"]))
@@ -334,9 +335,12 @@ def build_card_row(
         if detail.title:
             title = detail.title
         if detail.effect:
+            effect_text = detail.effect.strip()
             description = merge_descriptions(detail.effect, description)
         if detail.image_url:
             image_url = detail.image_url
+    if effect_text is None:
+        effect_text = description or None
     image_url = normalise_image_url(image_url, card_code, set_code)
 
     card_id = slugify_card_code(card_code)
@@ -351,6 +355,7 @@ def build_card_row(
         level=level,
         cost=cost,
         imageUrl=image_url,
+        effect=effect_text,
     )
 
 
@@ -500,6 +505,7 @@ def load_offline_bundle(set_code: str, offline_dir: Path) -> ExportBundle:
             level=item.get("level"),
             cost=item.get("cost"),
             imageUrl=item.get("imageUrl"),
+            effect=item.get("effect"),
         )
         for item in cards_data
     ]

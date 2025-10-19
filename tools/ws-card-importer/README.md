@@ -19,6 +19,7 @@ The importer expects the CSV to use UTF-8 encoding with the following headers:
 | `title`        | Card name displayed in-game. |
 | `rarity`       | Rarity string (`C`, `U`, `R`, `SR`, `SP`, etc.). |
 | `description`  | Free-form description text. |
+| `effect`       | (Optional) Detailed effect text for the card. |
 | `color`        | Card color (`YELLOW`, `BLUE`, etc.). Leave blank if unknown. |
 | `level`        | Card level as an integer. Leave blank if the card has no level. |
 | `cost`         | Play cost as an integer. Leave blank if the card has no cost. |
@@ -73,6 +74,13 @@ using the default location):
 
 ```bash
 python tools/ws-card-importer/download_official_cards.py DDD SFN --pretty
+```
+
+To use the repository's all-in-one helper that refreshes the bundled dataset (falling back to the
+offline snapshots when necessary), run:
+
+```bash
+python tools/update_local_dataset.py --pretty
 ```
 
 The crawler mirrors the JavaScript logic from the site, traverses each card’s dedicated

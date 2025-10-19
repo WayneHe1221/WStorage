@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -30,6 +31,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
@@ -41,10 +43,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.shape.RoundedCornerShape
 import coil3.compose.AsyncImage
+import coil3.request.CachePolicy
+import coil3.request.ImageRequest
 import com.russhwolf.settings.Settings
 import com.waynehe.wstorage.data.model.InventoryEntry
 import com.waynehe.wstorage.data.model.Rarity
@@ -581,49 +587,89 @@ private fun InventoryActionButton(text: String, onClick: () -> Unit) {
 @Composable
 private fun CardThumbnail(card: CardSummary) {
     val placeholderLabel = card.title.firstOrNull()?.uppercaseChar()?.toString() ?: "?"
-    Box(
-        modifier = Modifier
-            .size(64.dp)
-            .clip(MaterialTheme.shapes.small)
-            .background(MaterialTheme.colorScheme.surfaceVariant),
-        contentAlignment = Alignment.Center
-    ) {
-        val imageUrl = card.imageUrl
-        var showFallback by remember(imageUrl) { mutableStateOf(imageUrl.isNullOrBlank()) }
-        var isLoading by remember(imageUrl) { mutableStateOf(!imageUrl.isNullOrBlank()) }
-
-        if (!imageUrl.isNullOrBlank()) {
-            AsyncImage(
-                model = imageUrl,
-                contentDescription = card.title,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize(),
-                onLoading = { isLoading = true },
-                onError = {
-                    isLoading = false
-                    showFallback = true
-                },
-                onSuccess = {
-                    isLoading = false
-                    showFallback = false
-                }
-            )
+    val context = LocalContext.current
+    val imageUrl = card.imageUrl
+    val imageRequest = remember(imageUrl) {
+        imageUrl?.takeIf { it.isNotBlank() }?.let {
+            ImageRequest.Builder(context)
+                .data(it)
+                .setHeader("Referer", "https://ws-tcg.com/")
+                .diskCachePolicy(CachePolicy.ENABLED)
+                .memoryCachePolicy(CachePolicy.ENABLED)
+                .crossfade(true)
+                .build()
         }
+    }
 
-        when {
-            isLoading -> {
-                CircularProgressIndicator(
-                    modifier = Modifier.size(24.dp),
-                    strokeWidth = 2.dp
+    var showFallback by remember(imageUrl) { mutableStateOf(imageRequest == null) }
+    var isLoading by remember(imageUrl) { mutableStateOf(imageRequest != null) }
+
+    val cardShape = RoundedCornerShape(8.dp)
+
+    Surface(
+        modifier = Modifier
+            .width(90.dp)
+            .aspectRatio(63f / 88f),
+        tonalElevation = 4.dp,
+        shadowElevation = 2.dp,
+        shape = cardShape,
+        color = MaterialTheme.colorScheme.surfaceVariant
+    ) {
+        Box(
+            modifier = Modifier
+                .clip(cardShape)
+                .background(MaterialTheme.colorScheme.surfaceVariant),
+            contentAlignment = Alignment.Center
+        ) {
+            if (imageRequest != null) {
+                AsyncImage(
+                    model = imageRequest,
+                    contentDescription = card.title,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxSize(),
+                    onLoading = { isLoading = true },
+                    onError = {
+                        isLoading = false
+                        showFallback = true
+                    },
+                    onSuccess = {
+                        isLoading = false
+                        showFallback = false
+                    }
                 )
             }
 
-            showFallback -> {
-                Text(
-                    text = placeholderLabel,
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
+            when {
+                isLoading -> {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(24.dp),
+                        strokeWidth = 2.dp
+                    )
+                }
+
+                showFallback -> {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(MaterialTheme.colorScheme.surfaceVariant)
+                    ) {
+                        Text(
+                            text = placeholderLabel,
+                            style = MaterialTheme.typography.headlineSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            text = card.cardCode,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
+                }
             }
         }
     }

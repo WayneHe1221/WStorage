@@ -49,6 +49,18 @@ When new data becomes available:
 If you fetch data directly from the official website, download or export it as CSV before running
 the importer. This keeps the script light-weight and avoids depending on fragile HTML scraping.
 
+### Verifying your Python installation
+
+If your machine only provides the `python3` binary, or if module resolution differs between shells,
+run the bundled helper to ensure all importer scripts compile cleanly:
+
+```bash
+python3 tools/ws-card-importer/verify_compile.py
+```
+
+The helper resolves the importer directory automatically so it works regardless of the current
+working directory.
+
 ## Downloading official datasets
 
 The repository also provides `download_official_cards.py`, a helper that reaches the

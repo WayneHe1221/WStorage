@@ -81,6 +81,12 @@ Execute the command from the repository root. The script accepts local files or 
 the JSON file in the format consumed by the app. Refer to the tool’s [README](tools/ws-card-importer/README.md)
 for the expected CSV columns and additional options.
 
+To verify that your Python environment can compile the tooling without syntax errors, run:
+
+```bash
+python3 tools/ws-card-importer/verify_compile.py
+```
+
 ---
 
 Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html),

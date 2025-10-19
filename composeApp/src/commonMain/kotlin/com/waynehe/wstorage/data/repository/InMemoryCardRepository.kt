@@ -17,9 +17,7 @@ import kotlin.math.min
 
 class InMemoryCardRepository(
     private val resourcePath: String = DEFAULT_RESOURCE_PATH,
-    private val json: Json = defaultJson,
-    private val fallbackSeries: List<WsSeries> = defaultSeries,
-    private val fallbackCards: List<WsCard> = defaultCards
+    private val json: Json = defaultJson
 ) : CardRepository {
 
     private val cachedData: CardData by lazy { loadCardData() }
@@ -64,21 +62,20 @@ class InMemoryCardRepository(
 
     private fun loadCardData(): CardData {
         val rawJson = CardResourceReader.readText(resourcePath)
-        if (rawJson != null) {
-            try {
-                val bundle = parseCardBundle(rawJson)
-                if (bundle != null && (bundle.series.isNotEmpty() || bundle.cards.isNotEmpty())) {
-                    val series = if (bundle.series.isNotEmpty()) bundle.series else fallbackSeries
-                    val cards = if (bundle.cards.isNotEmpty()) bundle.cards else fallbackCards
-                    return CardData(series, cards)
-                }
-            } catch (error: SerializationException) {
-                // Ignore malformed JSON and use the fallback data below.
-            } catch (error: IllegalArgumentException) {
-                // Ignore and fall back to embedded data.
+            ?: throw IllegalStateException("Card data resource $resourcePath not found")
+        try {
+            val bundle = parseCardBundle(rawJson)
+                ?: throw IllegalStateException("Card data bundle is empty")
+            if (bundle.series.isEmpty()) {
+                throw IllegalStateException("Card data bundle does not include any series entries")
             }
+            if (bundle.cards.isEmpty()) {
+                throw IllegalStateException("Card data bundle does not include any card entries")
+            }
+            return CardData(bundle.series, bundle.cards)
+        } catch (error: SerializationException) {
+            throw IllegalStateException("Failed to parse card data", error)
         }
-        return CardData(fallbackSeries, fallbackCards)
     }
 
     private fun parseCardBundle(rawJson: String): CardDataBundle? {
@@ -146,118 +143,5 @@ class InMemoryCardRepository(
         private val defaultJson = Json {
             ignoreUnknownKeys = true
         }
-
-        private val defaultSeries = listOf(
-            WsSeries(
-                id = "sao-10th",
-                name = "Sword Art Online 10th Anniversary",
-                setCode = "SAO/S100",
-                releaseYear = 2023
-            ),
-            WsSeries(
-                id = "hololive-vol2",
-                name = "hololive production Vol.2",
-                setCode = "HOL/WE36",
-                releaseYear = 2024
-            ),
-            WsSeries(
-                id = "blue-archive",
-                name = "Blue Archive",
-                setCode = "BA/WE31",
-                releaseYear = 2024
-            )
-        )
-
-        private val defaultCards = listOf(
-            WsCard(
-                id = "sao-10th-001",
-                seriesId = "sao-10th",
-                cardCode = "SAO/S100-001",
-                title = "Dual Wielder, Kirito",
-                rarity = Rarity.SUPER_RARE,
-                description = "Protagonist of SAO with dual wielding ability.",
-                color = "BLACK",
-                level = 3,
-                cost = 2,
-                imageUrl = null,
-                ownedCount = 3
-            ),
-            WsCard(
-                id = "sao-10th-002",
-                seriesId = "sao-10th",
-                cardCode = "SAO/S100-002",
-                title = "Flash of the Blue, Asuna",
-                rarity = Rarity.RARE,
-                description = "Asuna ready to support the front lines.",
-                color = "BLUE",
-                level = 2,
-                cost = 1,
-                imageUrl = null,
-                wishlistCount = 1
-            ),
-            WsCard(
-                id = "holo-vol2-001",
-                seriesId = "hololive-vol2",
-                cardCode = "HOL/WE36-001",
-                title = "Secret Society holoX, La+ Darknesss",
-                rarity = Rarity.SPECIAL,
-                description = "The leader of holoX makes a mysterious entrance.",
-                color = "PURPLE",
-                level = 3,
-                cost = 2,
-                imageUrl = null
-            ),
-            WsCard(
-                id = "holo-vol2-002",
-                seriesId = "hololive-vol2",
-                cardCode = "HOL/WE36-002",
-                title = "Idol of the Stars, Hoshimachi Suisei",
-                rarity = Rarity.SUPER_RARE,
-                description = "Suisei sings with a shining stage presence.",
-                color = "BLUE",
-                level = 3,
-                cost = 2,
-                imageUrl = null,
-                wishlistCount = 2
-            ),
-            WsCard(
-                id = "ba-001",
-                seriesId = "blue-archive",
-                cardCode = "BA/WE31-001",
-                title = "Gourmet Research, Yuuka",
-                rarity = Rarity.UNCOMMON,
-                description = "The meticulous treasurer of the Gourmet Research Club.",
-                color = "YELLOW",
-                level = 1,
-                cost = 0,
-                imageUrl = null,
-                ownedCount = 5
-            ),
-            WsCard(
-                id = "ba-002",
-                seriesId = "blue-archive",
-                cardCode = "BA/WE31-002",
-                title = "After-School Sweets Club, Azusa",
-                rarity = Rarity.SUPER_RARE,
-                description = "Azusa enjoys desserts after missions.",
-                color = "RED",
-                level = 2,
-                cost = 2,
-                imageUrl = null
-            ),
-            WsCard(
-                id = "ba-003",
-                seriesId = "blue-archive",
-                cardCode = "BA/WE31-003",
-                title = "On-the-Job Spirit, Aru",
-                rarity = Rarity.RARE,
-                description = "Aru brings energy to the Problem Solver 68 squad.",
-                color = "GREEN",
-                level = 1,
-                cost = 1,
-                imageUrl = null,
-                wishlistCount = 1
-            )
-        )
     }
 }

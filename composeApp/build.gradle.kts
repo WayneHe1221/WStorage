@@ -57,6 +57,7 @@ kotlin {
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.multiplatform.settings)
+            implementation(libs.coil3.compose)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

@@ -69,15 +69,38 @@ in your IDE’s toolbar or open the [/iosApp](./iosApp) directory in Xcode and r
 ## Updating card data
 
 The application reads card metadata from [`composeApp/src/commonMain/resources/cards.json`](composeApp/src/commonMain/resources/cards.json).
+For Android builds the dataset is mirrored to [`composeApp/src/androidMain/assets/cards.json`](composeApp/src/androidMain/assets/cards.json)
+so the APK bundles the same data.
 Run the CSV importer in [`tools/ws-card-importer`](tools/ws-card-importer) whenever you need to refresh the dataset:
 
 ```bash
-python tools/ws-card-importer/import_cards.py <path-to-csv>
+# Replace PATH/TO/export.csv with the file you exported from the official site.
+python tools/ws-card-importer/import_cards.py PATH/TO/export.csv
 ```
 
-Execute the command from the repository root. The script accepts local files or HTTP URLs and rewrites
-the JSON file in the format consumed by the app. Refer to the tool’s [README](tools/ws-card-importer/README.md)
-for the expected CSV columns and additional options.
+Execute the command from the repository root. The script accepts either a local CSV path (e.g.
+`tools/ws-card-importer/sample_cards.csv`) or an HTTP URL and rewrites the JSON file in the format
+consumed by the app. Refer to the tool’s [README](tools/ws-card-importer/README.md) for the expected
+CSV columns and additional options.
+
+For automated updates you can instead rely on the bundled crawler, which mirrors the website’s
+card search logic and assembles the configured sets into `cards.json`:
+
+```bash
+python tools/ws-card-importer/download_official_cards.py DDD SFN
+```
+
+The crawler now targets the same AJAX search endpoint used by <https://ws-tcg.com/cardlist/search/>,
+walks the corresponding detail pages (for effect text, card names, and artwork URLs), and prefers the
+Japanese metadata by default. Pass `--language en` if you need the English strings instead. When the
+search API is unavailable the helper falls back to the official pack export and finally to the curated
+offline snapshots bundled with the repository.
+
+To verify that your Python environment can compile the tooling without syntax errors, run:
+
+```bash
+python3 tools/ws-card-importer/verify_compile.py
+```
 
 ---
 

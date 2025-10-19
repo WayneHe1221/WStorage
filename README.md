@@ -74,12 +74,14 @@ so the APK bundles the same data.
 Run the CSV importer in [`tools/ws-card-importer`](tools/ws-card-importer) whenever you need to refresh the dataset:
 
 ```bash
-python tools/ws-card-importer/import_cards.py <path-to-csv>
+# Replace PATH/TO/export.csv with the file you exported from the official site.
+python tools/ws-card-importer/import_cards.py PATH/TO/export.csv
 ```
 
-Execute the command from the repository root. The script accepts local files or HTTP URLs and rewrites
-the JSON file in the format consumed by the app. Refer to the tool’s [README](tools/ws-card-importer/README.md)
-for the expected CSV columns and additional options.
+Execute the command from the repository root. The script accepts either a local CSV path (e.g.
+`tools/ws-card-importer/sample_cards.csv`) or an HTTP URL and rewrites the JSON file in the format
+consumed by the app. Refer to the tool’s [README](tools/ws-card-importer/README.md) for the expected
+CSV columns and additional options.
 
 To verify that your Python environment can compile the tooling without syntax errors, run:
 

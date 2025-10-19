@@ -593,7 +593,9 @@ private fun CardThumbnail(card: CardSummary) {
         imageUrl?.takeIf { it.isNotBlank() }?.let {
             ImageRequest.Builder(context)
                 .data(it)
-                .setHeader("Referer", "https://ws-tcg.com/")
+                .headers {
+                    add("Referer", "https://ws-tcg.com/")
+                }
                 .diskCachePolicy(CachePolicy.ENABLED)
                 .memoryCachePolicy(CachePolicy.ENABLED)
                 .crossfade(true)

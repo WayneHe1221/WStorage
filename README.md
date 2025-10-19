@@ -87,13 +87,14 @@ For automated updates you can instead rely on the bundled crawler, which mirrors
 card search logic and assembles the configured sets into `cards.json`:
 
 ```bash
-python tools/ws-card-importer/download_official_cards.py DDD SFN --language en
+python tools/ws-card-importer/download_official_cards.py DDD SFN
 ```
 
-Pass `--language ja` to prefer the Japanese metadata exposed by the search endpoint. The helper
-tries the same AJAX search endpoint used by <https://ws-tcg.com/cardlist/search/>, falls back to the
-legacy pack export if necessary, and finally reuses the curated offline snapshots when no network
-requests succeed.
+The crawler now targets the same AJAX search endpoint used by <https://ws-tcg.com/cardlist/search/>,
+walks the corresponding detail pages (for effect text, card names, and artwork URLs), and prefers the
+Japanese metadata by default. Pass `--language en` if you need the English strings instead. When the
+search API is unavailable the helper falls back to the official pack export and finally to the curated
+offline snapshots bundled with the repository.
 
 To verify that your Python environment can compile the tooling without syntax errors, run:
 

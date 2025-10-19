@@ -13,6 +13,7 @@ from urllib.error import URLError, HTTPError
 from urllib.request import Request, urlopen
 
 from cardlist_search import CardSearchClient, CardSearchError
+from card_page import CardPageFetchError, CardPageFetcher
 from import_cards import CardRow, ExportBundle, SeriesRow, mirror_android_assets_if_applicable
 
 USER_AGENT = (
@@ -45,6 +46,8 @@ SET_NAME_OVERRIDES: dict[str, str] = {
 
 _SEARCH_CLIENT: CardSearchClient | object | None = None
 _SEARCH_CLIENT_FAILED = object()
+_CARD_PAGE_FETCHER: CardPageFetcher | object | None = None
+_CARD_PAGE_FETCHER_FAILED = object()
 
 
 def parse_args(argv: Sequence[str]) -> argparse.Namespace:
@@ -63,8 +66,8 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
     )
     parser.add_argument(
         "--language",
-        default="en",
-        help="Language code used for the search crawler (default: en)",
+        default="ja",
+        help="Language code used for the search crawler (default: ja for Japanese)",
     )
     parser.add_argument(
         "--offline-dir",
@@ -82,7 +85,7 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
 
 def main(argv: Sequence[str]) -> int:
     args = parse_args(argv)
-    language = (args.language or "en").strip() or "en"
+    language = (args.language or "ja").strip() or "ja"
     bundles = []
     for set_code in args.sets:
         bundle = load_set_bundle(set_code, args.offline_dir, language)
@@ -158,11 +161,19 @@ def fetch_from_search(set_code: str, language: str) -> ExportBundle:
     info = dict(result.info or {})
     cards_raw = list(result.cards)
     series_row = build_series_row(info, cards_raw, set_code)
-    cards = [
-        card
-        for raw in cards_raw
-        if (card := build_card_row(raw, series_row.id, series_row.setCode)) is not None
-    ]
+    detail_language = _normalise_detail_language(language)
+    fetcher = _ensure_card_page_fetcher()
+    cards: list[CardRow] = []
+    for raw in cards_raw:
+        card = build_card_row(
+            raw,
+            series_row.id,
+            series_row.setCode,
+            detail_fetcher=fetcher,
+            detail_language=detail_language,
+        )
+        if card is not None:
+            cards.append(card)
     if not cards:
         raise CardSearchError(f"Search data for set {set_code} did not include any cards")
     return ExportBundle(series=[series_row], cards=cards)
@@ -181,6 +192,33 @@ def _ensure_search_client() -> CardSearchClient:
         raise
     _SEARCH_CLIENT = client
     return client
+
+
+def _ensure_card_page_fetcher() -> CardPageFetcher:
+    global _CARD_PAGE_FETCHER
+    if isinstance(_CARD_PAGE_FETCHER, CardPageFetcher):
+        return _CARD_PAGE_FETCHER
+    if _CARD_PAGE_FETCHER is _CARD_PAGE_FETCHER_FAILED:
+        raise CardPageFetchError("Card detail fetcher initialisation previously failed")
+    try:
+        fetcher = CardPageFetcher(user_agent=USER_AGENT)
+    except CardPageFetchError:
+        _CARD_PAGE_FETCHER = _CARD_PAGE_FETCHER_FAILED
+        raise
+    _CARD_PAGE_FETCHER = fetcher
+    return fetcher
+
+
+def _normalise_detail_language(language: str) -> str:
+    lang = (language or "").strip().lower()
+    if lang in {"", "ja", "jp", "japanese"}:
+        return "ja"
+    return lang
+
+
+def _disable_card_page_fetcher() -> None:
+    global _CARD_PAGE_FETCHER
+    _CARD_PAGE_FETCHER = _CARD_PAGE_FETCHER_FAILED
 
 
 def parse_official_payload(payload: object, set_code: str) -> ExportBundle:
@@ -261,7 +299,14 @@ def derive_set_code_from_cards(cards_raw: list[object], default: str) -> str:
     return default
 
 
-def build_card_row(raw: object, series_id: str, set_code: str) -> CardRow | None:
+def build_card_row(
+    raw: object,
+    series_id: str,
+    set_code: str,
+    *,
+    detail_fetcher: CardPageFetcher | None = None,
+    detail_language: str = "ja",
+) -> CardRow | None:
     if not isinstance(raw, dict):
         return None
     card_code = _first_str(raw, ["card_no", "cardNo", "cardCode", "card_code", "number"])
@@ -275,6 +320,23 @@ def build_card_row(raw: object, series_id: str, set_code: str) -> CardRow | None
     level = parse_optional_int(_first_str(raw, ["level", "lv"]))
     cost = parse_optional_int(_first_str(raw, ["cost", "c"]))
     image_url = _first_str(raw, ["image", "imageUrl", "image_url", "card_image"])
+    detail = None
+    if detail_fetcher is not None:
+        try:
+            detail = detail_fetcher.fetch(card_code, language=detail_language)
+        except CardPageFetchError as exc:
+            print(
+                f"Warning: failed to fetch detail page for {card_code}: {exc}",
+                file=sys.stderr,
+            )
+            _disable_card_page_fetcher()
+    if detail is not None:
+        if detail.title:
+            title = detail.title
+        if detail.effect:
+            description = merge_descriptions(detail.effect, description)
+        if detail.image_url:
+            image_url = detail.image_url
     image_url = normalise_image_url(image_url, card_code, set_code)
 
     card_id = slugify_card_code(card_code)
@@ -290,6 +352,23 @@ def build_card_row(raw: object, series_id: str, set_code: str) -> CardRow | None
         cost=cost,
         imageUrl=image_url,
     )
+
+
+def merge_descriptions(primary: str, secondary: str) -> str:
+    primary = (primary or "").strip()
+    secondary = (secondary or "").strip()
+    if not primary:
+        return secondary
+    if not secondary:
+        return primary
+    if primary == secondary:
+        return primary
+    if secondary in primary:
+        return primary
+    parts = [primary]
+    if secondary and secondary not in parts:
+        parts.append(secondary)
+    return "\n\n".join(part for part in parts if part)
 
 
 def normalise_image_url(image_url: str | None, card_code: str, set_code: str) -> str | None:

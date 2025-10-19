@@ -72,12 +72,14 @@ merged data is written to `cards.json` (mirroring to the Android assets director
 using the default location):
 
 ```bash
-python tools/ws-card-importer/download_official_cards.py DDD SFN --language en --pretty
+python tools/ws-card-importer/download_official_cards.py DDD SFN --pretty
 ```
 
-Use `--language ja` to prefer the Japanese card names when the search endpoint exposes
-them. If neither the search API nor the pack export can be reached, the script falls back
-to the `offline/` directory. These JSON files contain curated snapshots for each set so
+The crawler mirrors the JavaScript logic from the site, traverses each card’s dedicated
+detail page to capture Japanese names, effect text, and canonical artwork URLs, and prefers
+Japanese metadata by default. Supply `--language en` to request English strings when
+available. If neither the search API nor the pack export can be reached, the script falls
+back to the `offline/` directory. These JSON files contain curated snapshots for each set so
 that development can proceed even without internet access. Run the script with `--pretty`
 to produce formatted JSON while debugging the crawler output.
 

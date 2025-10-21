@@ -590,10 +590,12 @@ private fun CardThumbnail(card: CardSummary) {
     val placeholderLabel = card.title.firstOrNull()?.uppercaseChar()?.toString() ?: "?"
     val context = LocalContext.current
     val imageUrl = card.imageUrl
-    val imageRequest = remember(imageUrl) {
-        imageUrl?.takeIf { it.isNotBlank() }?.let {
+    val imageRequest: ImageRequest? = remember(imageUrl) {
+        if (imageUrl.isNullOrBlank()) {
+            null
+        } else {
             ImageRequest.Builder(context)
-                .data(it)
+                .data(imageUrl)
                 .httpHeaders {
                     append("Referer", "https://ws-tcg.com/")
                 }
@@ -604,8 +606,8 @@ private fun CardThumbnail(card: CardSummary) {
         }
     }
 
-    var showFallback by remember(imageUrl) { mutableStateOf(imageRequest == null) }
-    var isLoading by remember(imageUrl) { mutableStateOf(imageRequest != null) }
+    var showFallback by remember(imageRequest) { mutableStateOf(imageRequest == null) }
+    var isLoading by remember(imageRequest) { mutableStateOf(imageRequest != null) }
 
     val cardShape = RoundedCornerShape(8.dp)
 

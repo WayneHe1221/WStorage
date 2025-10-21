@@ -74,6 +74,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 private const val DEFAULT_PAGE_SIZE = 50
+private const val WS_TCG_REFERER = "https://ws-tcg.com/"
 
 @Composable
 fun CardCatalogueScreen(
@@ -597,7 +598,7 @@ private fun CardThumbnail(card: CardSummary) {
             ImageRequest.Builder(context)
                 .data(imageUrl)
                 .httpHeaders {
-                    append("Referer", "https://ws-tcg.com/")
+                    append("Referer", WS_TCG_REFERER)
                 }
                 .diskCachePolicy(CachePolicy.ENABLED)
                 .memoryCachePolicy(CachePolicy.ENABLED)

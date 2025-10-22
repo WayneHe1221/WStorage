@@ -58,6 +58,7 @@ kotlin {
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.multiplatform.settings)
             implementation(libs.coil3.compose)
+            implementation(libs.coil3.network.ktor)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

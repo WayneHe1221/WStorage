@@ -57,6 +57,7 @@ class CardRow:
     level: t.Optional[int]
     cost: t.Optional[int]
     imageUrl: t.Optional[str]
+    effect: t.Optional[str] = None
 
 
 @dataclass
@@ -126,6 +127,7 @@ class CsvCardImporter:
                     level=level,
                     cost=cost,
                     imageUrl=_to_optional_str(row.get("image_url")),
+                    effect=_to_optional_str(row.get("effect")),
                 )
             )
 

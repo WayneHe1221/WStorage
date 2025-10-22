@@ -104,6 +104,7 @@ class InMemoryCardRepository(
         val rarityCode = obj.string("rarity") ?: return null
         val rarity = Rarity.fromCode(rarityCode) ?: return null
         val description = obj.string("description") ?: ""
+        val effect = obj.string("effect")?.ifBlank { null }
         val color = obj.string("color")?.ifBlank { null }
         val level = obj.int("level")
         val cost = obj.int("cost")
@@ -117,6 +118,7 @@ class InMemoryCardRepository(
             title = title,
             rarity = rarity,
             description = description,
+            effect = effect,
             color = color,
             level = level,
             cost = cost,

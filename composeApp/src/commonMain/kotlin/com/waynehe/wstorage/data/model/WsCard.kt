@@ -7,6 +7,7 @@ data class WsCard(
     val title: String,
     val rarity: Rarity,
     val description: String,
+    val effect: String? = null,
     val color: String? = null,
     val level: Int? = null,
     val cost: Int? = null,
